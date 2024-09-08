@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class Applicant extends Authenticatable
 {
     use HasFactory, Notifiable;
 
@@ -16,10 +16,18 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $primaryKey = 'applicant_id';
     protected $fillable = [
-        'name',
+        'applicant_name',
         'email',
         'password',
+        'address',
+        'phone',
+        'curriculum_vitae',
+        'portfolio',
+        'gender',
+        'education',
+        'work_experience',
     ];
 
     /**

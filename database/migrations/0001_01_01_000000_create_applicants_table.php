@@ -11,12 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+        Schema::create('applicants', function (Blueprint $table) {
+            $table->id('applicant_id');
+            $table->string('applicant_name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('curriculum_vitae')->nullable();
+            $table->string('portfolio')->nullable();
+            $table->enum('gender', ['man', 'woman'])->nullable();
+            $table->enum('education', ['senior high school', 'vocational school', 'bachelor degree', 'post graduate', 'master degree'])->nullable();
+            $table->enum('work_experience', ['< 1', '1', '2', '3', '4', '> 5'])->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
