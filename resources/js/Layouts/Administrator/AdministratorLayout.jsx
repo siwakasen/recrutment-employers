@@ -4,6 +4,7 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
+import { menu } from '@/Constants/constants';
 
 export default function AdministratorLayout({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -20,9 +21,11 @@ export default function AdministratorLayout({ user, header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('administrator.dashboard')} active={route().current('administrator.dashboard')}>
-                                    Dashboard
-                                </NavLink>
+                                {menu(user.role.role_id).map((item, index) => (
+                                    <NavLink key={index} href={item.href} active={item.current}>
+                                        {item.name}
+                                    </NavLink>
+                                ))}
                             </div>
                         </div>
 
@@ -90,9 +93,11 @@ export default function AdministratorLayout({ user, header, children }) {
 
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('administrator.dashboard')} active={route().current('administrator.dashboard')}>
-                            Dashboard
-                        </ResponsiveNavLink>
+                        {menu(user.role.role_id).map((item, index) => (
+                            <ResponsiveNavLink key={index} href={item.href} active={item.current}>
+                                {item.name}
+                            </ResponsiveNavLink>
+                        ))}
                     </div>
 
                     <div className="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">

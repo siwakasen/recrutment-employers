@@ -39,9 +39,9 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('guest.administrator')->group(function () {
     Route::prefix('administrator')->group(function () {
-        Route::get('login', [AdministratorController::class, 'create'])
+        Route::get('login', [AdministratorController::class, 'loginview'])
             ->name('administrator.login');
-        Route::post('login', [AdministratorController::class, 'store'])
+        Route::post('login', [AdministratorController::class, 'login'])
             ->name('administrator.login');
     });
 });
