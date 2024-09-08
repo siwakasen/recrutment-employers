@@ -33,7 +33,7 @@ class AdministratorController extends Controller
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function logout(Request $request): RedirectResponse
     {
         Auth::guard('administrator')->logout();
 
@@ -75,6 +75,14 @@ class AdministratorController extends Controller
         ]);
 
         Administrator::create($request->all());
+        return redirect()->route('administrator.index');
+    }
+
+
+    public function destroy(Administrator $administrator): RedirectResponse
+    {
+
+        $administrator->delete();
         return redirect()->route('administrator.index');
     }
 }

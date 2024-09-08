@@ -29,13 +29,14 @@ Route::middleware('auth')->group(function () {
 Route::prefix('administrator')->group(function () {
     Route::middleware('administrator')->group(function () {
         Route::get('/dashboard', [AdministratorController::class, 'dashboard'])->name('administrator.dashboard');
-        Route::post('/logout', [AdministratorController::class, 'destroy'])->name('administrator.logout');
+        Route::post('/logout', [AdministratorController::class, 'logout'])->name('administrator.logout');
     });
 
     Route::middleware(['administrator', 'executive'])->group(function () {
         Route::get('/index', [AdministratorController::class, 'index'])->name('administrator.index');
         Route::get('/create', [AdministratorController::class, 'create'])->name('administrator.create');
         Route::post('/store', [AdministratorController::class, 'store'])->name('administrator.store');
+        Route::delete('/{administrator}', [AdministratorController::class, 'destroy'])->name('administrator.destroy');
     });
 });
 

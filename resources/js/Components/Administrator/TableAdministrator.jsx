@@ -26,7 +26,7 @@ export default function TableAdministrator({ users }) {
     };
     const deleteUser = (e) => {
         e.preventDefault();
-        destroy(route('users.destroy', data), {
+        destroy(route('administrator.destroy', data), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onFinish: () => reset(),
@@ -49,6 +49,9 @@ export default function TableAdministrator({ users }) {
                         <th className="px-6 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50  dark:bg-gray-700 text-left text-xs leading-4 font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">
                             Role
                         </th>
+                        <th className="px-6 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50  dark:bg-gray-700 text-left text-xs leading-4 font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">
+                            &nbsp;
+                        </th>
 
                     </tr>
                 </thead>
@@ -67,12 +70,12 @@ export default function TableAdministrator({ users }) {
                             <td className="px-6 py-4 whitespace-no-wrap dark:bg-slate-700 ">
                                 <div className="text-sm leading-5 text-gray-900 dark:text-slate-300">{user.role.role_name}</div>
                             </td>
-                            {/* <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                            <td className="px-6 py-4 whitespace-no-wrap  dark:bg-slate-700">
                                 <div className="flex gap-2">
-                                    <Link href={route('users.edit', user)} className="px-2 py-1 rounded-md bg-gray-800 text-white hover:text-slate-900 hover:bg-slate-200 hover:shadow-lg">Edit</Link>
-                                    <button disabled={user.role == 'admin' ? true : false} onClick={() => confirmUserDeletion(user)} className=" disabled:bg-slate-400 disabled:shadow-none px-2 py-1 rounded-md bg-red-700 text-white  hover:bg-red-500 hover:shadow-lg">Delete</button>
+                                    {/* <Link href={route('users.edit', user)} className="px-2 py-1 rounded-md bg-gray-800 text-white hover:text-slate-900 hover:bg-slate-200 hover:shadow-lg">Edit</Link> */}
+                                    <button onClick={() => confirmUserDeletion(user)} className=" disabled:bg-slate-400 disabled:shadow-none px-2 py-1 rounded-md bg-red-700 text-white  hover:bg-red-500 hover:shadow-lg">Delete</button>
                                 </div>
-                            </td> */}
+                            </td>
                         </tr>
                     ))}
                 </tbody>

@@ -82,7 +82,7 @@ export default function Create({ administrator }) {
                                     <SelectBox
                                         id="role_id"
                                         currentValue={data.role_id}
-                                        onChange={(e) => setData('c', e.target.value)}
+                                        onChange={(e) => setData('role_id', e.target.value)}
 
                                         options={[
                                             { value: '1', label: 'HR' },
