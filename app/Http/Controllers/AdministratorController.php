@@ -9,6 +9,8 @@ use App\Models\Administrator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Password;
+
 
 class AdministratorController extends Controller
 {
@@ -53,5 +55,26 @@ class AdministratorController extends Controller
         return Inertia::render('Administrator/Index', [
             'administrators' => $administrators,
         ]);
+    }
+    public function create()
+    {
+        return Inertia::render('Administrator/Create');
+    }
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'admin_name' => 'required',
+            'email' => 'required|email|unique:administrators,email',
+            'password' => 'required|min:8',
+            'password_confirmation' => 'required|same:password',
+            'role_id' => 'required|exists:roles,role_id',
+        ]);
+
+        $request->validate([
+            'password' => [Password::min(8)->uncompromised()->mixedCase()->letters()->numbers()->symbols()],
+        ]);
+
+        Administrator::create($request->all());
+        return redirect()->route('administrator.index');
     }
 }

@@ -32,6 +32,7 @@ Route::middleware('administrator')->group(function () {
         Route::get('/index', [AdministratorController::class, 'index'])->name('administrator.index');
         Route::post('/logout', [AdministratorController::class, 'destroy'])->name('administrator.logout');
         Route::get('/create', [AdministratorController::class, 'create'])->name('administrator.create');
+        Route::post('/store', [AdministratorController::class, 'store'])->name('administrator.store');
     });
 });
 

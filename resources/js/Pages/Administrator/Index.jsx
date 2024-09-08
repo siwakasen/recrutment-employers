@@ -9,7 +9,7 @@ export default function AdminIndex({ administrator, administrators }) {
         <AdministratorLayout
             user={administrator.user}
 
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administrators</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Administrators</h2>}
         >
             <Head title="Admin" />
 
@@ -22,8 +22,6 @@ export default function AdminIndex({ administrator, administrators }) {
                         </Link>
                     </div>
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="">
-                        </div>
                         <TableAdministrator users={administrators} />
                         <Pagination links={administrators.links} />
                     </div>
