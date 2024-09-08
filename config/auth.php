@@ -43,7 +43,7 @@ return [
         'administrator' => [
             'driver' => 'session',
             'provider' => 'administrators',
-        ], 
+        ],
     ],
 
     /*
@@ -69,7 +69,7 @@ return [
             'model' =>  App\Models\Applicant::class,
         ],
 
-        'administrator' => [
+        'administrators' => [
             'driver' => 'eloquent',
             'model' =>  App\Models\Administrator::class,
         ],

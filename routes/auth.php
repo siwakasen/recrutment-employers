@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredApplicantController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredApplicantController::class, 'create'])
@@ -33,6 +35,15 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+});
+
+Route::middleware('guest.administrator')->group(function () {
+    Route::prefix('administrator')->group(function () {
+        Route::get('login', [AdministratorController::class, 'create'])
+            ->name('administrator.login');
+        Route::post('login', [AdministratorController::class, 'store'])
+            ->name('administrator.login');
+    });
 });
 
 Route::middleware('auth')->group(function () {
