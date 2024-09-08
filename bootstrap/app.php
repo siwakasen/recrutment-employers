@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             [
                 'administrator' => \App\Http\Middleware\AdminMiddleware::class,
                 'guest.administrator' => \App\Http\Middleware\GuestAdminMiddleware::class,
+                'executive' => \App\Http\Middleware\ExecutiveMiddleware::class,
             ]
         );
     })
