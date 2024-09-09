@@ -73,7 +73,7 @@ export default function TableAdministrator({ users }) {
                             <td className="px-6 py-4 whitespace-no-wrap  dark:bg-slate-700">
                                 <div className="flex gap-2">
                                     {/* <Link href={route('users.edit', user)} className="px-2 py-1 rounded-md bg-gray-800 text-white hover:text-slate-900 hover:bg-slate-200 hover:shadow-lg">Edit</Link> */}
-                                    <button onClick={() => confirmUserDeletion(user)} className=" disabled:bg-slate-400 disabled:shadow-none px-2 py-1 rounded-md bg-red-700 text-white  hover:bg-red-500 hover:shadow-lg">Delete</button>
+                                    <button onClick={() => confirmUserDeletion(user)} className=" disabled:bg-slate-400 disabled:shadow-none px-2 py-1 rounded-md bg-red-700 dark:bg-rose-700 hover:dark:bg-rose-500 text-white  hover:bg-red-500 hover:shadow-lg">Delete</button>
                                 </div>
                             </td>
                         </tr>
