@@ -17,7 +17,7 @@ export const menu = (role_id) => {
             {
                 name: 'Admin',
                 href: route('administrator.index'),
-                current: route().current('administrator.index'),
+                current: route().current('administrator.index') || route().current('administrator.search'),
             },
         ]
     }

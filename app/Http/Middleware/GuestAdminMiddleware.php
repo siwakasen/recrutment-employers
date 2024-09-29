@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class GuestAdminMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request that is not authenticated as a admin.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */

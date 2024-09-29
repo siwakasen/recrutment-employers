@@ -57,6 +57,7 @@ export default function AdministratorLayout({ user, header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
+                                        <Dropdown.Link href={route('administrator.password.edit')}>Change Password</Dropdown.Link>
                                         <Dropdown.Link href={route('administrator.logout')} method="post" as="button">
                                             Log Out
                                         </Dropdown.Link>
@@ -107,6 +108,7 @@ export default function AdministratorLayout({ user, header, children }) {
                         </div>
 
                         <div className="mt-3 space-y-1">
+                            <ResponsiveNavLink href={route('administrator.password.edit')}>Change Password</ResponsiveNavLink>
                             <ResponsiveNavLink method="post" href={route('administrator.logout')} as="button">
                                 Log Out
                             </ResponsiveNavLink>

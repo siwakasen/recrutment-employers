@@ -59,10 +59,10 @@ export default function TableAdministrator({ users }) {
                     {users.data.map((user) => (
                         <tr key={user.admin_id} >
                             <td className="px-6 py-4 whitespace-no-wrap dark:bg-slate-700 ">
-                                <div className="text-sm leading-5 text-gray-900  dark:text-slate-300">{user.admin_name}</div>
+                                <div className="text-sm leading-5 text-gray-900  dark:text-slate-300">{user.admin_id}</div>
                             </td>
                             <td className="px-6 py-4 whitespace-no-wrap dark:bg-slate-700 ">
-                                <div className="text-sm leading-5 text-gray-900 dark:text-slate-300">{user.email}</div>
+                                <div className="text-sm leading-5 text-gray-900 dark:text-slate-300">{user.admin_name}</div>
                             </td>
                             <td className="px-6 py-4 whitespace-no-wrap dark:bg-slate-700 ">
                                 <div className="text-sm leading-5 text-gray-900 dark:text-slate-300">{user.email}</div>
@@ -72,7 +72,7 @@ export default function TableAdministrator({ users }) {
                             </td>
                             <td className="px-6 py-4 whitespace-no-wrap  dark:bg-slate-700">
                                 <div className="flex gap-2">
-                                    {/* <Link href={route('users.edit', user)} className="px-2 py-1 rounded-md bg-gray-800 text-white hover:text-slate-900 hover:bg-slate-200 hover:shadow-lg">Edit</Link> */}
+                                    <Link href={route('administrator.edit', user)} className="px-2 py-1 rounded-md bg-gray-800 text-white hover:text-slate-900 hover:bg-slate-200 hover:shadow-lg">Edit</Link>
                                     <button onClick={() => confirmUserDeletion(user)} className=" disabled:bg-slate-400 disabled:shadow-none px-2 py-1 rounded-md bg-red-700 dark:bg-rose-700 hover:dark:bg-rose-500 text-white  hover:bg-red-500 hover:shadow-lg">Delete</button>
                                 </div>
                             </td>
@@ -82,11 +82,11 @@ export default function TableAdministrator({ users }) {
             </table>
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
-                    <h2 className="text-lg font-medium text-gray-900">
+                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-400">
                         Are you sure you want to delete this account?
                     </h2>
 
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-500">
                         Once your account is deleted, all of its resources and data will be permanently deleted. Please
                         enter your password to confirm you would like to permanently delete your account.
                     </p>
