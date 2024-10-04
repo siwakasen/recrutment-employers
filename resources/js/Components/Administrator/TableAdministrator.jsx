@@ -6,7 +6,6 @@ import { useForm } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
 
 export default function TableAdministrator({ users }) {
-
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
     const {
         data,
@@ -56,7 +55,7 @@ export default function TableAdministrator({ users }) {
                     </tr>
                 </thead>
                 <tbody className='dark:bg-gray-800'>
-                    {users.data.map((user) => (
+                    {users.data && users.data.map((user) => (
                         <tr key={user.admin_id} >
                             <td className="px-6 py-4 whitespace-no-wrap dark:bg-slate-700 ">
                                 <div className="text-sm leading-5 text-gray-900  dark:text-slate-300">{user.admin_id}</div>

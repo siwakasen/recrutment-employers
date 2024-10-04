@@ -74,12 +74,15 @@ class AdministratorController extends Controller
                         $q->where('role_name', 'like', '%' . $search . '%');
                     });
             })
-            ->paginate(10); // Adjust pagination as needed
+            ->paginate(10)
+            ->appends(['search' => $search]); // Pass the search to pagination
 
         return Inertia::render('Administrator/Index', [
             'administrators' => $administrators,
+            'search' => $search, // Include the search value in the response
         ]);
     }
+
 
     public function create()
     {

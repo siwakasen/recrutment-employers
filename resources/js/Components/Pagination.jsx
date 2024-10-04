@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 
-export default function Pagination({ links }) {
+export default function Pagination({ links, search }) {
     return (
         <div className="bg-white dark:bg-gray-700 px-4 py-3 flex items-center justify-between border-t dark:border-gray-900 border-gray-200 sm:px-6">
             <div className=" flex-1 flex items-center justify-end">
@@ -9,7 +9,7 @@ export default function Pagination({ links }) {
                         {links.map((link, index) => (
                             <Link
                                 key={index}
-                                href={link.url}
+                                href={link.url && search ? `${link.url}&search=${search}` : link.url}
                                 className={
                                     link.active ?
                                         "bg-indigo-500 text-white relative inline-flex items-center px-4 py-2 border  text-sm leading-5 font-medium  rounded-sm hover:text-white focus:z-10 focus:outline-none focus:border-indigo-300 focus:shadow-outline-indigo active:bg-indigo-500 active:text-white transition ease-in-out duration-150" :
