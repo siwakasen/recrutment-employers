@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id('job_id');
-            $table->unsignedBigInteger('job_type_id');
             $table->string('job_name');
+            $table->unsignedBigInteger('job_type_id');
+            $table->foreign('job_type_id')->references('job_type_id')->on('job_types');
             $table->bigInteger('min_rate_salary');
             $table->bigInteger('max_rate_salary');
             $table->integer('min_experience');

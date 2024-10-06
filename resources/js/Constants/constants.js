@@ -6,6 +6,11 @@ export const menu = (role_id) => {
                 href: route('administrator.dashboard'),
                 current: route().current('administrator.dashboard'),
             },
+            {
+                name: 'Jobs',
+                href: route('jobs.index'),
+                current: route().current('jobs.index') || route().current('jobs.search') || route().current('jobs.create'),
+            },
         ]
     } else {
         return [
@@ -17,7 +22,12 @@ export const menu = (role_id) => {
             {
                 name: 'Admin',
                 href: route('administrator.index'),
-                current: route().current('administrator.index') || route().current('administrator.search'),
+                current: route().current('administrator.index') || route().current('administrator.search') || route().current('administrator.create'),
+            },
+            {
+                name: 'Jobs',
+                href: route('jobs.index'),
+                current: route().current('jobs.index'),
             },
         ]
     }

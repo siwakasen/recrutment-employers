@@ -88,6 +88,7 @@ class AdministratorController extends Controller
     {
         return Inertia::render('Administrator/Create');
     }
+
     public function store(Request $request): RedirectResponse
     {
         $request->validate([

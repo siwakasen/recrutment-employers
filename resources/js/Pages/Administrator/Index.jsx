@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from 'react';
 export default function AdminIndex({ administrator, administrators, search }) {
     const isFirstRender = useRef(true);
     const [searchInput, setSearchInput] = useState(search || ''); // Initialize with search value if it exists
-
+    console.log(administrators);
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
@@ -36,7 +36,7 @@ export default function AdminIndex({ administrator, administrators, search }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <label className="p-2 text-lg font-semibold dark:text-slate-200">Total Administrators: {administrators.length}</label>
+                    <label className="p-2 text-lg font-semibold dark:text-slate-200">Total Administrators: {administrators.data.length}</label>
                     <div className="p-2 flex">
                         <input
                             type="text"

@@ -23,13 +23,14 @@ export default function Create({ administrator }) {
 
     const submit = (e) => {
         e.preventDefault();
+        console.log(errors);
         post(route('administrator.store'));
     };
 
     return (
         <AdministratorLayout
             user={administrator.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administrator</h2>}
+        // header={<h2 className="font-semibold text-xl text-gray-800 dark:text-white leading-tight">Administrator</h2>}
         >
             <Head title="Create Administrator" />
 

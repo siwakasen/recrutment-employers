@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('portfolio')->nullable();
             $table->enum('gender', ['man', 'woman'])->nullable();
             $table->enum('education', ['senior high school', 'vocational school', 'bachelor degree', 'post graduate', 'master degree'])->nullable();
-            $table->enum('work_experience', ['< 1', '1', '2', '3', '4', '> 5'])->nullable();
+            $table->integer('work_experience')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react';
 
 export default function Pagination({ links, search }) {
     return (
-        <div className="bg-white dark:bg-gray-700 px-4 py-3 flex items-center justify-between border-t dark:border-gray-900 border-gray-200 sm:px-6">
+        <div className="bg-white dark:bg-gray-700 px-4 py-3 flex items-center justify-between border-t dark:border-gray-900 border-gray-200 sm:px-6 w-full">
             <div className=" flex-1 flex items-center justify-end">
                 <div>
                     <nav className="relative z-0 inline-flex shadow-sm ">

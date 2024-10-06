@@ -39,8 +39,10 @@ class JobSeeder extends Seeder
                     'Perform unit testing',
                     'Perform integration testing',
                 ]),
-                'date_listed' => '2021-01-01',
-                'date_expired' => '2021-12-31',
+                'date_listed' => now(),
+                'date_expired' => now()->addMonth(2),
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'job_type_id' => 2,
@@ -67,8 +69,10 @@ class JobSeeder extends Seeder
                     'Perform data cleaning',
                     'Perform data transformation',
                 ]),
-                'date_listed' => '2021-01-01',
-                'date_expired' => '2021-12-31',
+                'date_listed' => now(),
+                'date_expired' => now()->addMonth(2),
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ]);
     }

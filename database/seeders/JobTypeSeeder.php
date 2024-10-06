@@ -15,23 +15,30 @@ class JobTypeSeeder extends Seeder
     {
         DB::table('job_types')->insert([
             [
-                'job_type_name' => 'Full-time'
+                'job_type_id' => 1,
+                'job_type_name' => 'Full-time On-Site'
             ],
             [
-                'job_type_name' => 'Part-time'
+                'job_type_id' => 2,
+                'job_type_name' => 'Full-time Hybrid'
             ],
             [
-                'job_type_name' => 'Contract'
+                'job_type_id' => 3,
+                'job_type_name' => 'Full-time Remote'
             ],
             [
-                'job_type_name' => 'Freelance'
+                'job_type_id' => 4,
+                'job_type_name' => 'Internship On-Site'
             ],
             [
-                'job_type_name' => 'Internship'
+                'job_type_id' => 5,
+                'job_type_name' => 'Internship Hybrid'
             ],
             [
-                'job_type_name' => 'Temporary'
-            ]
+                'job_type_id' => 6,
+                'job_type_name' => 'Internship Remote'
+            ],
+
         ]);
     }
 }
