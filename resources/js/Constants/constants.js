@@ -1,3 +1,5 @@
+import { toast } from 'sonner';
+
 export const menu = (role_id) => {
     if (role_id === 1) {
         return [
@@ -9,7 +11,7 @@ export const menu = (role_id) => {
             {
                 name: 'Jobs',
                 href: route('jobs.index'),
-                current: route().current('jobs.index') || route().current('jobs.search') || route().current('jobs.create'),
+                current: route().current('jobs.index') || route().current('jobs.search') || route().current('jobs.create') || route().current('jobs.edit'),
             },
         ]
     } else {
@@ -32,3 +34,10 @@ export const menu = (role_id) => {
         ]
     }
 }
+
+export const toastTypes = {
+    success: toast.success,
+    error: toast.error,
+    warning: toast.warning,
+    info: toast.info,
+};

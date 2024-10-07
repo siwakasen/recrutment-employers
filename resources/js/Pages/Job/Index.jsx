@@ -5,6 +5,7 @@ import { Link } from '@inertiajs/react';
 import TableJob from '@/Components/Job/TableJob';
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
+import { toastTypes } from '@/Constants/constants';
 
 export default function JobIndex({ administrator, jobs, search, message }) {
     const isFirstRender = useRef(true);
@@ -29,13 +30,6 @@ export default function JobIndex({ administrator, jobs, search, message }) {
 
     useEffect(() => {
         if (message) {
-
-            const toastTypes = {
-                success: toast.success,
-                error: toast.error,
-                warning: toast.warning,
-                info: toast.info,
-            };
             Object.keys(message).forEach(type => {
                 if (toastTypes[type]) {
                     toastTypes[type](message[type]);
@@ -53,7 +47,7 @@ export default function JobIndex({ administrator, jobs, search, message }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <label className="p-2 text-lg font-semibold dark:text-slate-200">Total Jobs: {jobs.data.length}</label>
+                    <label className="p-2 text-lg font-semibold dark:text-slate-200">Total Jobs: {jobs.total}</label>
                     <div className="p-2 flex">
                         <input
                             type="text"
@@ -77,7 +71,7 @@ export default function JobIndex({ administrator, jobs, search, message }) {
 
                     <Pagination
                         links={jobs.links}
-                        search={searchInput} // Pass the search value to Pagination
+                        search={searchInput}
                     />
                 </div>
             </div>

@@ -9,7 +9,7 @@ import { useForm } from '@inertiajs/react';
 import SelectBox from '@/Components/SelectBox';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
 
-export default function Create({ administrator, admin_to_edit }) {
+export default function Edit({ administrator, admin_to_edit }) {
     const { data, setData, patch, errors, processing, reset } = useForm({
         admin_name: admin_to_edit.admin_name,
         email: admin_to_edit.email,
@@ -33,10 +33,10 @@ export default function Create({ administrator, admin_to_edit }) {
                     <div className="p-4 sm:p-8 bg-white dark:bg-slate-700 shadow sm:rounded-lg">
                         <section className="max-w-xl">
                             <header>
-                                <h2 className="text-lg font-medium text-gray-900 dark:text-slate-200">Create Administrator</h2>
+                                <h2 className="text-lg font-medium text-gray-900 dark:text-slate-200">Update Administrator</h2>
 
                                 <p className="mt-1 text-sm text-gray-600 dark:text-slate-200">
-                                    Create a new administrator.
+                                    Update data administrator.
                                 </p>
                             </header>
 

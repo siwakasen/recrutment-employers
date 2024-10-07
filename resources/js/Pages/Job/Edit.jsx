@@ -8,27 +8,27 @@ import { useForm } from '@inertiajs/react';
 import SelectBox from '@/Components/SelectBox';
 import { useState } from 'react';
 
-export default function Create({ administrator }) {
+export default function Edit({ administrator, job }) {
     const [requirementInput, setRequirementInput] = useState('');
     const [responsibilityInput, setResponsibilityInput] = useState('');
 
-    const { data, setData, post, errors, processing, reset } = useForm({
-        job_type_id: '1',
-        job_name: '',
-        min_rate_salary: 0,
-        max_rate_salary: 0,
-        min_experience: 0,
-        job_desc: '',
-        job_place: '',
-        requirement: '',
-        responsibilities: [],
-        date_listed: '',
-        date_expired: '',
+    const { data, setData, put, errors, processing, reset } = useForm({
+        job_type_id: job.job_type_id,
+        job_name: job.job_name,
+        min_rate_salary: job.min_rate_salary,
+        max_rate_salary: job.max_rate_salary,
+        min_experience: job.min_experience,
+        job_desc: job.job_desc,
+        job_place: job.job_place,
+        requirement: JSON.parse(job.requirement),
+        responsibilities: JSON.parse(job.responsibilities),
+        date_listed: job.date_listed,
+        date_expired: job.date_expired,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('jobs.store'));
+        put(route('jobs.update', job));
 
     };
 
@@ -52,7 +52,7 @@ export default function Create({ administrator }) {
         <AdministratorLayout
             user={administrator.user}
         >
-            <Head title="Create Administrator" />
+            <Head title="Update Jobs" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -69,10 +69,10 @@ export default function Create({ administrator }) {
                                         Back
                                     </Link>
                                 </div>
-                                <h2 className="text-lg font-medium text-gray-900 dark:text-slate-200">Create Jobs</h2>
+                                <h2 className="text-lg font-medium text-gray-900 dark:text-slate-200">Update Jobs</h2>
 
                                 <p className="mt-1 text-sm text-gray-600 dark:text-slate-200">
-                                    Create a new job.
+                                    Update job data.
                                 </p>
                             </header>
 

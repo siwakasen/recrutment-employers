@@ -32,6 +32,8 @@ Route::prefix('administrator')->group(function () {
         Route::get('/dashboard', [AdministratorController::class, 'dashboard'])->name('administrator.dashboard');
         Route::post('/logout', [AdministratorController::class, 'logout'])->name('administrator.logout');
         Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
+        Route::get('/change-password', [AdministratorController::class, 'editPassword'])->name('administrator.password.edit');
+        Route::patch('/password/update', [AdministratorController::class, 'updatePassword'])->name('administrator.password.update');
 
         Route::middleware('executive')->group(function () {
             Route::get('/index', [AdministratorController::class, 'index'])->name('administrator.index');
@@ -41,13 +43,14 @@ Route::prefix('administrator')->group(function () {
             Route::get('/{administrator}/edit', [AdministratorController::class, 'edit'])->name('administrator.edit');
             Route::patch('/{administrator}', [AdministratorController::class, 'update'])->name('administrator.update');
             Route::get('/search', [AdministratorController::class, 'search'])->name('administrator.search');
-            Route::get('/change-password', [AdministratorController::class, 'editPassword'])->name('administrator.password.edit');
-            Route::patch('/password/update', [AdministratorController::class, 'updatePassword'])->name('administrator.password.update');
         });
 
         Route::middleware('hr')->group(function () {
             Route::get('/jobs/create', [JobController::class, 'create'])->name('jobs.create');
             Route::post('/jobs/store', [JobController::class, 'store'])->name('jobs.store');
+            Route::delete('/jobs/{job}', [JobController::class, 'destroy'])->name('jobs.destroy');
+            Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])->name('jobs.edit');
+            Route::put('/jobs/{job}', [JobController::class, 'update'])->name('jobs.update');
         });
     });
 });

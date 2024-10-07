@@ -9,8 +9,8 @@ export default function TableJob({ jobs }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
     const { data, setData, delete: destroy, processing, reset } = useForm({});
 
-    const confirmUserDeletion = (user) => {
-        setData(user);
+    const confirmUserDeletion = (job) => {
+        setData(job);
         setConfirmingUserDeletion(true);
     };
 
@@ -21,11 +21,11 @@ export default function TableJob({ jobs }) {
 
     const deleteUser = (e) => {
         e.preventDefault();
-        // destroy(route('administrator.destroy', data), {
-        //     preserveScroll: true,
-        //     onSuccess: () => closeModal(),
-        //     onFinish: () => reset(),
-        // });
+        destroy(route('jobs.destroy', data), {
+            preserveScroll: true,
+            onSuccess: () => closeModal(),
+            onFinish: () => reset(),
+        });
     };
     const formatToRupiah = (amount) => {
         return new Intl.NumberFormat('id-ID', {
@@ -78,6 +78,9 @@ export default function TableJob({ jobs }) {
                             </th>
                             <th className="px-6 py-3 border-b text-right text-xs font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wider">
                                 Date Expired
+                            </th>
+                            <th className="px-6 py-3 border-b text-right text-xs font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wider">
+                                &nbsp;
                             </th>
                         </tr>
                     </thead>
@@ -132,6 +135,12 @@ export default function TableJob({ jobs }) {
                                 </td>
                                 <td className="align-top px-6 py-4 whitespace-no-wrap text-sm text-right text-gray-900 dark:text-slate-300">
                                     {formatDate(job.date_expired)}
+                                </td>
+                                <td className="align-top px-6 py-4 whitespace-no-wrap text-sm text-right text-gray-900 dark:text-slate-300">
+                                    <div className="flex gap-2">
+                                        <Link href={route('jobs.edit', job)} className="px-2 py-1 rounded-md bg-gray-800 text-white hover:text-slate-900 hover:bg-slate-200 hover:shadow-lg">Edit</Link>
+                                        <button onClick={() => confirmUserDeletion(job)} className=" disabled:bg-slate-400 disabled:shadow-none px-2 py-1 rounded-md bg-red-700 dark:bg-rose-700 hover:dark:bg-rose-500 text-white  hover:bg-red-500 hover:shadow-lg">Delete</button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

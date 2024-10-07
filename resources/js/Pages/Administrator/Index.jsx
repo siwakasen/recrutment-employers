@@ -4,18 +4,18 @@ import Pagination from '@/Components/Pagination';
 import { Link } from '@inertiajs/react';
 import TableAdministrator from '@/Components/Administrator/TableAdministrator';
 import { useState, useEffect, useRef } from 'react';
+import { toastTypes } from '@/Constants/constants';
 
-export default function AdminIndex({ administrator, administrators, search }) {
+export default function AdminIndex({ administrator, administrators, search, message }) {
     const isFirstRender = useRef(true);
     const [searchInput, setSearchInput] = useState(search || ''); // Initialize with search value if it exists
-    console.log(administrators);
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
             return;
         }
         const delayDebounceFn = setTimeout(() => {
-            router.visit(route('administrator.search'), {
+            router.visit(route('administrator.index'), {
                 method: 'get',
                 data: { search: searchInput },
                 only: ['administrators'], // Update only the administrators
@@ -27,6 +27,16 @@ export default function AdminIndex({ administrator, administrators, search }) {
         return () => clearTimeout(delayDebounceFn);
     }, [searchInput, router]);
 
+    useEffect(() => {
+        if (message) {
+            Object.keys(message).forEach(type => {
+                if (toastTypes[type]) {
+                    toastTypes[type](message[type]);
+                }
+            });
+        }
+    }, [message]);
+
     return (
         <AdministratorLayout
             user={administrator.user}
@@ -36,7 +46,7 @@ export default function AdminIndex({ administrator, administrators, search }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <label className="p-2 text-lg font-semibold dark:text-slate-200">Total Administrators: {administrators.data.length}</label>
+                    <label className="p-2 text-lg font-semibold dark:text-slate-200">Total Administrators: {administrators.total}</label>
                     <div className="p-2 flex">
                         <input
                             type="text"

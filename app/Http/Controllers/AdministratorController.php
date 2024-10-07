@@ -51,19 +51,10 @@ class AdministratorController extends Controller
     }
 
 
-    public function index()
-    {
-        $administrators = Administrator::with('role')
-            ->paginate(10);
-
-        return Inertia::render('Administrator/Index', [
-            'administrators' => $administrators,
-        ]);
-    }
-
-    public function search(Request $request)
+    public function index(Request $request)
     {
         $search = $request->input('search');
+        $message = $request->session()->get('message');
 
         $administrators = Administrator::with('role')
             ->when($search, function ($query, $search) {
@@ -77,9 +68,11 @@ class AdministratorController extends Controller
             ->paginate(10)
             ->appends(['search' => $search]); // Pass the search to pagination
 
+
         return Inertia::render('Administrator/Index', [
             'administrators' => $administrators,
-            'search' => $search, // Include the search value in the response
+            'search' => $search,
+            'message' => $message,
         ]);
     }
 
@@ -104,7 +97,7 @@ class AdministratorController extends Controller
         ]);
 
         Administrator::create($request->all());
-        return redirect()->route('administrator.index');
+        return redirect()->route('administrator.index')->with('message', ['success' => 'Administrator created successfully']);
     }
 
     public function edit(Administrator $administrator)
@@ -123,14 +116,14 @@ class AdministratorController extends Controller
         ]);
 
         $administrator->update($request->all());
-        return redirect()->route('administrator.index');
+        return redirect()->route('administrator.index')->with('message', ['success' => 'Administrator updated successfully']);
     }
 
     public function destroy(Administrator $administrator): RedirectResponse
     {
 
         $administrator->delete();
-        return redirect()->route('administrator.index');
+        return redirect()->route('administrator.index')->with('message', ['success' => 'Administrator deleted successfully']);
     }
 
     public function editPassword()

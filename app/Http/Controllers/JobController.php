@@ -73,4 +73,40 @@ class JobController extends Controller
         Job::create($request->all());
         return redirect()->route('jobs.index')->with('message', ['success' => 'Job created successfully']);
     }
+
+    public function destroy(Job $job): RedirectResponse
+    {
+        $job->delete();
+        return redirect()->route('jobs.index')->with('message', ['success' => 'Job deleted successfully']);
+    }
+
+    public function edit(Job $job)
+    {
+        return Inertia::render('Job/Edit', [
+            'job' => $job,
+        ]);
+    }
+
+    public function update(Request $request, Job $job): RedirectResponse
+    {
+        $request->validate([
+            'job_type_id' => 'required|exists:job_types,job_type_id',
+            'job_name' => 'required|max:255|unique:jobs,job_name,' . $job->job_id . ',job_id',
+            'min_rate_salary' => 'required|numeric|min:0',
+            'max_rate_salary' => 'required|numeric|min:0',
+            'min_experience' => 'required|numeric|min:0',
+            'job_desc' => 'required',
+            'job_place' => 'required|max:255',
+            'requirement' => 'required|array',
+            'responsibilities' => 'required|array',
+            'date_listed' => 'required|date',
+            'date_expired' => 'required|date|after:date_listed',
+        ]);
+        $request->merge([
+            'requirement' => json_encode($request->input('requirement')),
+            'responsibilities' => json_encode($request->input('responsibilities')),
+        ]);
+        $job->update($request->all());
+        return redirect()->route('jobs.index')->with('message', ['success' => 'Job updated successfully']);
+    }
 }
