@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('applications', function (Blueprint $table) {
-            $table->id();
+            $table->id('application_id');
+            $table->unsignedBigInteger('job_id');
+            $table->foreign('job_id')->references('job_id')->on('jobs');
+            $table->unsignedBigInteger('applicant_id');
+            $table->foreign('applicant_id')->references('applicant_id')->on('applicants');
+            $table->string('status');
+            $table->string('message');
+            $table->string('employment_contract');
             $table->timestamps();
         });
     }
