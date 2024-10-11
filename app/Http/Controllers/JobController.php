@@ -39,7 +39,6 @@ class JobController extends Controller
         }
         $jobs = Job::with('jobType')
             ->paginate(10);
-
         return Inertia::render('Job/Index', [
             'jobs' => $jobs,
             'message' => $message,

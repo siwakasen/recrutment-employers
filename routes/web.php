@@ -6,15 +6,18 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+// return Inertia::render('Welcome', [
+//     'canLogin' => Route::has('login'),
+//     'canRegister' => Route::has('register'),
+//     'laravelVersion' => Application::VERSION,
+//     'phpVersion' => PHP_VERSION,
+// ]);
+// });
+
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
