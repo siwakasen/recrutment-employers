@@ -21,6 +21,7 @@
     "dependencies": {
         "@heroicons/react": "^2.1.5",
         "@inertiajs/react": "^1.2.0",
+        "dayjs": "^1.11.13",
         "inertia": "github:inertiajs/inertia",
         "sonner": "^1.5.0"
     }

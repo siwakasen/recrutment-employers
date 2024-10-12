@@ -26,7 +26,7 @@ class HomeController extends Controller
                 ->orWhere('job_desc', 'like', '%' . $search . '%')
                 ->orWhere('date_listed', 'like', '%' . $search . '%')
                 ->orWhere('date_expired', 'like', '%' . $search . '%')
-                ->paginate(3)
+                ->paginate(10)
                 ->appends(['search' => $search]);
             return Inertia::render('Homepage', [
                 'jobs' => $jobs,
@@ -34,9 +34,16 @@ class HomeController extends Controller
             ]);
         }
         $jobs = Job::with('jobType')
-            ->paginate(3);
+            ->paginate(10);
         return Inertia::render('Homepage', [
             'jobs' => $jobs,
+        ]);
+    }
+
+    public function detaill(Job $job)
+    {
+        return Inertia::render('Job/Jobdetail', [
+            'job' => $job,
         ]);
     }
 }

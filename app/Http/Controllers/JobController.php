@@ -31,7 +31,7 @@ class JobController extends Controller
                 ->orWhere('date_expired', 'like', '%' . $search . '%')
                 ->paginate(10)
                 ->appends(['search' => $search]);
-            return Inertia::render('Job/Index', [
+            return Inertia::render('Administrator/Job/Index', [
                 'jobs' => $jobs,
                 'search' => $search,
                 'message' => $message,
@@ -39,7 +39,7 @@ class JobController extends Controller
         }
         $jobs = Job::with('jobType')
             ->paginate(10);
-        return Inertia::render('Job/Index', [
+        return Inertia::render('Administrator/Job/Index', [
             'jobs' => $jobs,
             'message' => $message,
         ]);
@@ -47,7 +47,7 @@ class JobController extends Controller
 
     public function create()
     {
-        return Inertia::render('Job/Create');
+        return Inertia::render('Administrator/Job/Create');
     }
 
     public function store(Request $request): RedirectResponse
@@ -81,7 +81,7 @@ class JobController extends Controller
 
     public function edit(Job $job)
     {
-        return Inertia::render('Job/Edit', [
+        return Inertia::render('Administrator/Job/Edit', [
             'job' => $job,
         ]);
     }
