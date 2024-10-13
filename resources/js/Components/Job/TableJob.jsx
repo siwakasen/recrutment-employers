@@ -4,6 +4,7 @@ import Modal from '@/Components/Modal';
 import SecondaryButton from '@/Components/SecondaryButton';
 import { useForm } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
+import { formatToRupiah } from '@/Constants/constants';
 
 export default function TableJob({ jobs }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
@@ -27,14 +28,7 @@ export default function TableJob({ jobs }) {
             onFinish: () => reset(),
         });
     };
-    const formatToRupiah = (amount) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0, // adjust as needed
-            maximumFractionDigits: 0 // adjust as needed
-        }).format(amount);
-    };
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const date = new Date(dateString);

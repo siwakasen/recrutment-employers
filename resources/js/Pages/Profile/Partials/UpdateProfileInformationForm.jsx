@@ -11,12 +11,20 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
         applicant_name: user.applicant_name,
         email: user.email,
+        address: user.address || '',
+        phone: user.phone || '',
+        portfolio: user.portfolio || '',
+        gender: user.gender || '',
+        education: user.education || '',
+        work_experience: user.work_experience || '',
+        curriculum_vitae: null,
     });
 
     const submit = (e) => {
         e.preventDefault();
-
-        patch(route('profile.update'));
+        patch(route('profile.update'), {
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -31,7 +39,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="applicant_name" value="Applicant Name" />
+                    <InputLabel htmlFor="applicant_name" value="Name" />
 
                     <TextInput
                         id="applicant_name"
@@ -70,7 +78,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                                 href={route('verification.send')}
                                 method="post"
                                 as="button"
-                                className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                                className="underline text-sm ps-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                             >
                                 Click here to re-send the verification email.
                             </Link>
@@ -83,6 +91,124 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         )}
                     </div>
                 )}
+
+                <div>
+                    <InputLabel htmlFor="gender" value="Gender" />
+
+                    <select
+                        id="gender"
+                        className="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600"
+                        value={data.gender}
+                        onChange={(e) => setData('gender', e.target.value)}
+
+                    >
+                        <option value="">Select Gender</option>
+                        <option value="man">Male</option>
+                        <option value="woman">Female</option>
+                    </select>
+
+                    <InputError className="mt-2" message={errors.gender} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="address" value="Address" />
+
+                    <TextInput
+                        id="address"
+                        className="mt-1 block w-full"
+                        value={data.address}
+                        placeholder="Example: Jl. Jend. Sudirman No. 1"
+                        onChange={(e) => setData('address', e.target.value)}
+
+                        autoComplete="address"
+                    />
+
+                    <InputError className="mt-2" message={errors.address} />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="phone" value="Phone" />
+
+                    <TextInput
+                        id="phone"
+                        className="mt-1 block w-full"
+                        value={data.phone}
+                        placeholder="Example: 081234567890"
+                        onChange={(e) => setData('phone', e.target.value)}
+
+                        autoComplete="phone"
+                    />
+
+                    <InputError className="mt-2" message={errors.phone} />
+                </div>
+
+
+                <div>
+                    {/* portfolio link */}
+                    <InputLabel htmlFor="portfolio" value="Portfolio Link" />
+
+                    <TextInput
+                        id="portfolio"
+                        className="mt-1 block w-full"
+                        value={data.portfolio}
+                        onChange={(e) => setData('portfolio', e.target.value)}
+
+                        autoComplete="portfolio"
+                    />
+
+                    <InputError className="mt-2" message={errors.portfolio} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="work_experience" value="Work Experience (in year)" />
+                    <TextInput
+                        id="work_experience"
+                        type="number"
+                        className="mt-1 block w-full"
+                        placeholder="Example: 1"
+                        value={data.work_experience}
+                        onChange={(e) => setData('work_experience', e.target.value)}
+
+                        autoComplete="work_experience"
+                    />
+
+                    <InputError className="mt-2" message={errors.work_experience} />
+                </div>
+
+                {/* education (enum) */}
+                <div>
+                    <InputLabel htmlFor="education" value="Education" />
+
+                    <select
+                        id="education"
+                        className="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600"
+                        value={data.education}
+                        onChange={(e) => setData('education', e.target.value)}
+
+                    >
+
+                        <option value="">-Change-</option>
+                        <option value="senior high school">Senior High School</option>
+                        <option value="vocational school">Vocational School</option>
+                        <option value="bachelor degree">Bachelor Degree</option>
+                        <option value="post graduate">Post Graduate</option>
+                        <option value="master degree">Master Degree</option>
+                    </select>
+
+                    <InputError className="mt-2" message={errors.education} />
+                </div>
+
+                {/* file input curriculum vitae */}
+                <div>
+                    <InputLabel htmlFor="curriculum_vitae" value="Curriculum Vitae" />
+
+                    <input
+                        type="file"
+                        id="curriculum_vitae"
+                        className="mt-1 block w-full"
+                        onChange={(e) => setData('curriculum_vitae', e.target.files[0])}
+                    />
+
+                    <InputError className="mt-2" message={errors.curriculum_vitae} />
+                </div>
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>Save</PrimaryButton>

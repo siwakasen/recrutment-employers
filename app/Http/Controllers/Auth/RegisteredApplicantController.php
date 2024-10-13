@@ -45,7 +45,7 @@ class RegisteredApplicantController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        session()->flash('sentVerifMessage', true);
+        return redirect(route('home.index', absolute: false));
     }
 }

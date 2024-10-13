@@ -25,6 +25,13 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(Applicant::class)->ignore($this->user()->applicant_id, 'applicant_id'),
             ],
+            'address' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:15'],
+            'portfolio' => ['nullable', 'string', 'url'], // Assuming this is a URL
+            'gender' => ['nullable', 'in:man,woman'], // Add acceptable values
+            'education' => ['nullable', 'string', 'max:255'],
+            'work_experience' => ['nullable', 'integer', 'max:255'],
+            'curriculum_vitae' => ['nullable', 'file'], // If uploading a file
         ];
     }
 }

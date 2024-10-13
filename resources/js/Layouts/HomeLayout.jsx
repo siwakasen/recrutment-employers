@@ -23,8 +23,8 @@ export default function Homelayout({ user, header, children }) {
                             {
                                 user && (
                                     <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                        <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                            Dashboard
+                                        <NavLink href={route('home.index')} active={route().current('home.index')}>
+                                            Job List
                                         </NavLink>
                                     </div>
                                 )
@@ -42,7 +42,7 @@ export default function Homelayout({ user, header, children }) {
                                                         type="button"
                                                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
                                                     >
-                                                        {user.applicant_name}AA
+                                                        {user.applicant_name}
 
                                                         <svg
                                                             className="ms-2 -me-0.5 h-4 w-4"
@@ -124,8 +124,8 @@ export default function Homelayout({ user, header, children }) {
 
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
+                        <ResponsiveNavLink href={route('home.index')} active={route().current('home.index')}>
+                            Job List
                         </ResponsiveNavLink>
                     </div>
 
@@ -150,7 +150,6 @@ export default function Homelayout({ user, header, children }) {
                     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
                 </header>
             )}
-            <img src="/images/rec_banners_2.jpg" alt="Banner" className="w-full max-h-[20rem] object-cover" />
 
             <main>{children}</main>
         </div>

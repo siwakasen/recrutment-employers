@@ -12,6 +12,7 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
+        $sentVerifMessage = session('sentVerifMessage', false);
         $search = $request->input('search');
         if ($search) {
             $jobs = Job::with('jobType')
@@ -28,13 +29,30 @@ class HomeController extends Controller
                 ->orWhere('date_expired', 'like', '%' . $search . '%')
                 ->paginate(10)
                 ->appends(['search' => $search]);
+
+            if ($sentVerifMessage) {
+                return Inertia::render('Homepage', [
+                    'jobs' => $jobs,
+                    'search' => $search,
+                    'sentVerifMessage' => $sentVerifMessage,
+                ]);
+            }
+
             return Inertia::render('Homepage', [
                 'jobs' => $jobs,
                 'search' => $search,
             ]);
         }
+
         $jobs = Job::with('jobType')
             ->paginate(10);
+
+        if ($sentVerifMessage) {
+            return Inertia::render('Homepage', [
+                'jobs' => $jobs,
+                'sentVerifMessage' => $sentVerifMessage,
+            ]);
+        }
         return Inertia::render('Homepage', [
             'jobs' => $jobs,
         ]);
@@ -42,6 +60,7 @@ class HomeController extends Controller
 
     public function detaill(Job $job)
     {
+        $job->load('jobType');
         return Inertia::render('Job/Jobdetail', [
             'job' => $job,
         ]);
