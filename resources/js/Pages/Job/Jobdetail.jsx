@@ -11,7 +11,7 @@ import { formatToRupiah } from '@/Constants/constants';
 dayjs.extend(relativeTime);
 
 export default function Jobdetail({ auth, job }) {
-    console.log(job);
+
     return (
         <>
             <Head title={job.job_name} />

@@ -41,6 +41,21 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit');
     }
 
+    public function storeCv(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'curriculum_vitae' => ['required', 'file', 'mimes:pdf', 'max:1024'],
+        ]);
+
+        $path = $request->file('curriculum_vitae')->store('cvs', 'public');
+
+        $request->user()->update([
+            'curriculum_vitae' => '/storage/' . $path,
+        ]);
+
+        return Redirect::route('profile.edit');
+    }
+
     /**
      * Delete the user's account.
      */

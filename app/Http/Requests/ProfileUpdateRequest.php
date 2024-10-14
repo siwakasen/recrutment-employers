@@ -12,13 +12,17 @@ class ProfileUpdateRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Validation\UnauthorizedException
+     * @throws \Illuminate\Validation\ValidatedInput
+     * 
      */
     public function rules(): array
     {
         return [
-            'applicant_name' => ['required', 'string', 'max:255'],
+            'applicant_name' => ['string', 'max:255'],
             'email' => [
-                'required',
+
                 'string',
                 'lowercase',
                 'email',
@@ -31,7 +35,7 @@ class ProfileUpdateRequest extends FormRequest
             'gender' => ['nullable', 'in:man,woman'], // Add acceptable values
             'education' => ['nullable', 'string', 'max:255'],
             'work_experience' => ['nullable', 'integer', 'max:255'],
-            'curriculum_vitae' => ['nullable', 'file'], // If uploading a file
+            'curriculum_vitae' => ['nullable', 'file', 'mimes:pdf'], // If uploading a file
         ];
     }
 }

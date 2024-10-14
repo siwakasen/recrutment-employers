@@ -3,12 +3,14 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Link, useForm, usePage } from '@inertiajs/react';
+import { toast } from 'sonner';
 import { Transition } from '@headlessui/react';
-
+import { useDropzone } from 'react-dropzone';
+import { useState } from 'react';
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
     const user = usePage().props.auth.user;
-
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
+    const [filePreview, setFilePreview] = useState(null);
+    const { data, setData, patch, errors, processing, recentlySuccessful, } = useForm({
         applicant_name: user.applicant_name,
         email: user.email,
         address: user.address || '',
@@ -17,15 +19,42 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
         gender: user.gender || '',
         education: user.education || '',
         work_experience: user.work_experience || '',
-        curriculum_vitae: null,
     });
 
+    const onDrop = (acceptedFiles) => {
+        if (acceptedFiles.length && acceptedFiles[0].type === 'application/pdf') {
+            const file = acceptedFiles[0];
+            setData('curriculum_vitae', file);
+
+            setFilePreview(URL.createObjectURL(file));
+        } else {
+            toast.error('Please upload a PDF file.');
+        }
+    };
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: 'application/pdf',
+    });
     const submit = (e) => {
         e.preventDefault();
+
+        const formData = new FormData();
+
+        Object.keys(data).forEach((key) => {
+            formData.append(key, data[key]);
+        });
+
         patch(route('profile.update'), {
+            data: formData,
             preserveScroll: true,
+            forceFormData: true,
+            onError: (errors) => {
+                toast.error('Error updating profile.');
+                console.log(errors);
+            },
         });
     };
+
 
     return (
         <section className={className}>
@@ -184,7 +213,6 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         onChange={(e) => setData('education', e.target.value)}
 
                     >
-
                         <option value="">-Change-</option>
                         <option value="senior high school">Senior High School</option>
                         <option value="vocational school">Vocational School</option>
@@ -196,16 +224,43 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     <InputError className="mt-2" message={errors.education} />
                 </div>
 
-                {/* file input curriculum vitae */}
+                {/* CV Dropzone */}
                 <div>
                     <InputLabel htmlFor="curriculum_vitae" value="Curriculum Vitae" />
 
-                    <input
-                        type="file"
-                        id="curriculum_vitae"
-                        className="mt-1 block w-full"
-                        onChange={(e) => setData('curriculum_vitae', e.target.files[0])}
-                    />
+                    <div
+                        {...getRootProps()}
+                        className={`mt-1 p-4 border-2 border-dashed ${isDragActive ? 'border-blue-500' : 'border-gray-300'
+                            } rounded-md`}
+                    >
+                        <input {...getInputProps()} />
+                        {isDragActive ? (
+                            <p className='dark:text-gray-200'>Drop the file here ...</p>
+                        ) : (
+                            <p className='dark:text-gray-200'>Drag the file here or click to select a file</p>
+                        )}
+                    </div>
+
+                    {data.curriculum_vitae && (
+                        <div className="mt-2">
+                            <p>Selected File: {data.curriculum_vitae.name}</p>
+                        </div>
+                    )}
+
+                    {/* Preview of the PDF file */}
+                    {filePreview && (
+                        <div className="mt-2">
+                            <p>Preview:</p>
+                            <embed src={filePreview} type="application/pdf" width="100%" height="400px" />
+                        </div>
+                    )}
+
+                    {user.curriculum_vitae && data.curriculum_vitae && (
+                        <div className="mt-2">
+
+                            <p>Current CV: <a href={user.curriculum_vitae} target="_blank" className="text-blue-500 underline">View</a></p>
+                        </div>
+                    )}
 
                     <InputError className="mt-2" message={errors.curriculum_vitae} />
                 </div>

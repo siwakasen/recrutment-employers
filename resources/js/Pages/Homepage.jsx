@@ -33,7 +33,6 @@ export default function Homepage({ auth, jobs, sentVerifMessage }) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log('submit');
         post(route('verification.send'), {
             onSuccess: () => {
                 setStatus('verification-link-sent');
@@ -78,7 +77,7 @@ export default function Homepage({ auth, jobs, sentVerifMessage }) {
                                     <div key={index} className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 mb-4 border border-gray-200 dark:border-none hover:shadow-lg transition-shadow">
                                         <Link href={route('jobs.detail', job)}>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-2xl font-bold text-blue-600 dark:text-gray-300">{job.job_name}</span>
+                                                <span className="text-2xl font-bold  dark:text-gray-300">{job.job_name}</span>
                                                 <span className="text-gray-500 text-md dark:text-gray-300">
                                                     {job.job_type.job_type_name}
                                                 </span>

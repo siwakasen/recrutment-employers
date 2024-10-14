@@ -6,7 +6,7 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "@headlessui/react": "^2.0.0",
+        "@headlessui/react": "^2.1.10",
         "@tailwindcss/forms": "^0.5.3",
         "@vitejs/plugin-react": "^4.2.0",
         "autoprefixer": "^10.4.12",
@@ -23,6 +23,7 @@
         "@inertiajs/react": "^1.2.0",
         "dayjs": "^1.11.13",
         "inertia": "github:inertiajs/inertia",
+        "react-dropzone": "^14.2.9",
         "sonner": "^1.5.0"
     }
 }
