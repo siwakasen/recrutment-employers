@@ -8,6 +8,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import { Transition } from "@headlessui/react";
 
+
 export default function UploadCVForm({ className = '' }) {
 
     const user = usePage().props.auth.user;

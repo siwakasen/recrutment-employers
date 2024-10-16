@@ -1,12 +1,11 @@
 import { Link, Head, router } from '@inertiajs/react';
 import Homelayout from '@/Layouts/HomeLayout';
-import { useState } from 'react';
-import TableJob from '@/Components/Job/TableJob';
-import PaginationCool from '@/Components/PaginationCool';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { formatToRupiah } from '@/Constants/constants';
-
+import { FaCoins, FaNetworkWired } from "react-icons/fa";
+import { MdWork } from "react-icons/md";
+import { WiTime3 } from "react-icons/wi";
 // Extend Day.js with the relativeTime plugin
 dayjs.extend(relativeTime);
 
@@ -35,24 +34,18 @@ export default function Jobdetail({ auth, job }) {
                                             <span>{job.job_place}</span>
                                         </div>
                                         <div className="flex items-center dark:text-white">
-                                            <svg className="w-5 h-5 text-gray-700  dark:text-gray-300 mr-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 4a1 1 0 112 0v4a1 1 0 01-2 0V4zm1 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                                            </svg>
+                                            <MdWork className='me-2' />
                                             <span>{job.job_type.job_type_name}</span>
                                         </div>
                                     </div>
                                     <div>
 
                                         <div className="flex items-center dark:text-white">
-                                            <svg className="w-5 h-5 text-gray-700  dark:text-gray-300 mr-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 4a1 1 0 112 0v4a1 1 0 01-2 0V4zm1 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                                            </svg>
+                                            <WiTime3 className='me-2' />
                                             <span>Minimum {job.min_experience} years experience</span>
                                         </div>
                                         <div className="flex items-center dark:text-white">
-                                            <svg className="w-5 h-5 text-gray-700  dark:text-gray-300 mr-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 4a1 1 0 112 0v4a1 1 0 01-2 0V4zm1 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                                            </svg>
+                                            <FaCoins className='me-2' />
                                             <span>{formatToRupiah(job.min_rate_salary)} - {formatToRupiah(job.max_rate_salary)}</span>
                                         </div>
                                     </div>
