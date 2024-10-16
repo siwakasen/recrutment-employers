@@ -9,6 +9,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import { Transition } from "@headlessui/react";
 
 export default function UploadCVForm({ className = '' }) {
+
     const user = usePage().props.auth.user;
     const { data, setData, post, errors, processing, recentlySuccessful } = useForm({
         curriculum_vitae: user.curriculum_vitae || null,
@@ -45,7 +46,6 @@ export default function UploadCVForm({ className = '' }) {
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: 'application/pdf',
     });
 
     // submit form
@@ -62,23 +62,9 @@ export default function UploadCVForm({ className = '' }) {
             preserveScroll: true,
             forceFormData: true,
             onError: (errors) => {
-                toast.error('Error updating CV.');
-                console.log(errors);
+                toast.error(errors[Object.keys(errors)[0]]);
             },
         });
-    };
-
-    // Handle page changes
-    const handleNextPage = () => {
-        try {
-            setPageNumber((prev) => prev + 1);
-        } catch (e) {
-            toast.error(e.message);
-        }
-    };
-
-    const handlePreviousPage = () => {
-        setPageNumber((prev) => (prev > 1 ? prev - 1 : 1));
     };
 
     return (
@@ -88,26 +74,44 @@ export default function UploadCVForm({ className = '' }) {
 
                 {filePreview || data.curriculum_vitae ? (
                     <div className="mt-2">
-                        <iframe
-                            src={`${filePreview}#toolbar=0&page=${pageNumber}`}
-                            className="w-full h-[500px] border border-gray-300 rounded-md"
-                            title="PDF Preview"
-                        />
-                        <div className="mt-4 flex justify-between">
-                            <SecondaryButton onClick={handlePreviousPage} disabled={pageNumber === 1}>
-                                Previous Page
+                        {/* Conditional message when a file is dropped */}
+                        {data.curriculum_vitae === user.curriculum_vitae ? (
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                No changes made, Click View Document to see your current CV.
+                            </p>
+                        ) : data.curriculum_vitae ? (
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                File imported, click upload to save.
+                            </p>
+                        ) : null
+                        }
+
+                        {/* View Document Button */}
+                        <div className="">
+                            <SecondaryButton
+                                className="mt-2 me-2"
+                                onClick={() => {
+                                    if (filePreview) {
+                                        window.open(filePreview, '_blank'); // Opens the PDF in a new tab
+                                    } else {
+                                        toast.error('No document available to view.'); // Error message if no file is available
+                                    }
+                                }}
+                            >
+                                View Document
                             </SecondaryButton>
-                            <SecondaryButton onClick={handleNextPage} >
-                                Next Page
-                            </SecondaryButton>
+
+                            {/* Change PDF Button */}
+                            <PrimaryButton className="mt-2" onClick={() => {
+                                setData('curriculum_vitae', null);
+                                setFilePreview(null);
+                            }}>
+                                Change PDF
+                            </PrimaryButton>
+
                         </div>
-                        <PrimaryButton className="mt-4" onClick={() => {
-                            setData('curriculum_vitae', null);
-                            setFilePreview(null);
-                        }}>
-                            Change PDF
-                        </PrimaryButton>
                     </div>
+
                 ) : (
                     <div
                         {...getRootProps()}
