@@ -15,9 +15,7 @@ export default function UploadCVForm({ className = '' }) {
         curriculum_vitae: user.curriculum_vitae || null,
     });
 
-    //using react-dropzone
     const [filePreview, setFilePreview] = useState(null);
-    const [pageNumber, setPageNumber] = useState(1);
 
     const getFullURL = (path) => {
         if (path.startsWith('http') || path.startsWith('https')) {
@@ -92,16 +90,15 @@ export default function UploadCVForm({ className = '' }) {
                                 className="mt-2 me-2"
                                 onClick={() => {
                                     if (filePreview) {
-                                        window.open(filePreview, '_blank'); // Opens the PDF in a new tab
+                                        window.open(filePreview, '_blank');
                                     } else {
-                                        toast.error('No document available to view.'); // Error message if no file is available
+                                        toast.error('No document available to view.');
                                     }
                                 }}
                             >
                                 View Document
                             </SecondaryButton>
 
-                            {/* Change PDF Button */}
                             <PrimaryButton className="mt-2" onClick={() => {
                                 setData('curriculum_vitae', null);
                                 setFilePreview(null);
