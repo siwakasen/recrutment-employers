@@ -23,7 +23,9 @@
         "@inertiajs/react": "^1.2.0",
         "dayjs": "^1.11.13",
         "inertia": "github:inertiajs/inertia",
+        "pdfjs-dist": "^4.7.76",
         "react-dropzone": "^14.2.9",
+        "react-pdf": "^9.1.1",
         "sonner": "^1.5.0"
     }
 }

@@ -46,7 +46,11 @@ class ProfileController extends Controller
         $request->validate([
             'curriculum_vitae' => ['required', 'file', 'mimes:pdf', 'max:1024'],
         ]);
-
+        if ($request->user()->curriculum_vitae) {
+            $path = $request->user()->curriculum_vitae;
+            $path = str_replace('/storage/', '', $path);
+            unlink(storage_path('app/public/' . $path));
+        }
         $path = $request->file('curriculum_vitae')->store('cvs', 'public');
 
         $request->user()->update([
