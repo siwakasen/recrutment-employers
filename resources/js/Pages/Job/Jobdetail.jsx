@@ -13,7 +13,7 @@ import Register from '@/Components/Register';
 import { useState } from 'react';
 dayjs.extend(relativeTime);
 
-export default function Jobdetail({ auth, job }) {
+export default function Jobdetail({ auth, job, canResetPassword }) {
 
     const [isOnLoginModal, setIsOnLoginModal] = useState(true);
     const [applying, setApplying] = useState(false);
@@ -107,7 +107,7 @@ export default function Jobdetail({ auth, job }) {
                         </>
                         : isOnLoginModal ?
 
-                            <Login setIsOnLoginModal={setIsOnLoginModal} />
+                            <Login setIsOnLoginModal={setIsOnLoginModal} canResetPassword={canResetPassword} />
                             :
                             <Register setIsOnLoginModal={setIsOnLoginModal} />
                     }

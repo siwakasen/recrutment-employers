@@ -8,7 +8,8 @@ import { Toaster } from 'sonner';
 import Modal from '@/Components/Modal';
 import Login from '@/Components/Login';
 import Register from '@/Components/Register';
-export default function Homelayout({ user, header, children }) {
+export default function Homelayout({ user, header, children, canResetPassword }) {
+
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isOnLoginModal, setIsOnLoginModal] = useState(true);
@@ -168,7 +169,7 @@ export default function Homelayout({ user, header, children }) {
                     </>
                     : isOnLoginModal ?
 
-                        <Login setIsOnLoginModal={setIsOnLoginModal} />
+                        <Login setIsOnLoginModal={setIsOnLoginModal} canResetPassword={canResetPassword} />
                         :
                         <Register setIsOnLoginModal={setIsOnLoginModal} />
                 }

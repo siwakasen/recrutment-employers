@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Job;
 use Illuminate\Http\RedirectResponse;
-
+use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
 {
@@ -35,12 +35,14 @@ class HomeController extends Controller
                     'jobs' => $jobs,
                     'search' => $search,
                     'sentVerifMessage' => $sentVerifMessage,
+                    'canResetPassword' => Route::has('password.request'),
                 ]);
             }
 
             return Inertia::render('Homepage', [
                 'jobs' => $jobs,
                 'search' => $search,
+                'canResetPassword' => Route::has('password.request'),
             ]);
         }
 
@@ -51,10 +53,12 @@ class HomeController extends Controller
             return Inertia::render('Homepage', [
                 'jobs' => $jobs,
                 'sentVerifMessage' => $sentVerifMessage,
+                'canResetPassword' => Route::has('password.request'),
             ]);
         }
         return Inertia::render('Homepage', [
             'jobs' => $jobs,
+            'canResetPassword' => Route::has('password.request'),
         ]);
     }
 
@@ -63,6 +67,7 @@ class HomeController extends Controller
         $job->load('jobType');
         return Inertia::render('Job/Jobdetail', [
             'job' => $job,
+            'canResetPassword' => Route::has('password.request'),
         ]);
     }
 }

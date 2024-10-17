@@ -7,7 +7,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-export default function Homepage({ auth, jobs, sentVerifMessage }) {
+export default function Homepage({ auth, jobs, sentVerifMessage, canResetPassword }) {
+
     const { post, processing } = useForm({});
     const [searchInput, setSearchInput] = useState("");
     const [showModal, setShowModal] = useState(false);
@@ -44,7 +45,7 @@ export default function Homepage({ auth, jobs, sentVerifMessage }) {
     return (
         <>
             <Head title="Homepage" />
-            <Homelayout user={auth.user ? auth.user : ""}>
+            <Homelayout user={auth.user ? auth.user : ""} canResetPassword={canResetPassword}>
                 <img src="/images/rec_banners_2.jpg" alt="Banner" className="w-full max-h-[20rem] object-cover" />
 
                 <div className="pb-12 sm:relative -top-8">
