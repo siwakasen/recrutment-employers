@@ -6,10 +6,25 @@ import { formatToRupiah } from '@/Constants/constants';
 import { FaCoins, FaNetworkWired } from "react-icons/fa";
 import { MdWork } from "react-icons/md";
 import { WiTime3 } from "react-icons/wi";
+import Modal from '@/Components/Modal';
+import Login from '@/Components/Login';
+import Register from '@/Components/Register';
 // Extend Day.js with the relativeTime plugin
+import { useState } from 'react';
 dayjs.extend(relativeTime);
 
 export default function Jobdetail({ auth, job }) {
+
+    const [isOnLoginModal, setIsOnLoginModal] = useState(true);
+    const [applying, setApplying] = useState(false);
+
+    const closeModal = () => {
+        setApplying(false);
+    }
+
+    useState(() => {
+
+    }, [isOnLoginModal]);
 
     return (
         <>
@@ -51,7 +66,7 @@ export default function Jobdetail({ auth, job }) {
                                     </div>
                                     <div className='flex items-center gap-4 p-2'>
                                         <p className='text-gray-400'>{dayjs(job.date_listed).fromNow()} </p>
-                                        <button className="bg-green-600 text-white px-2 py-2  hover:bg-green-700 focus:outline-none focus:ring-0 focus:ring-green-400" >Apply Now</button>
+                                        <button onClick={() => { setApplying(true) }} className="bg-green-600 text-white px-2 py-2  hover:bg-green-700 focus:outline-none focus:ring-0 focus:ring-green-400" >Apply Now</button>
                                     </div>
                                 </div>
                             </div>
@@ -85,6 +100,18 @@ export default function Jobdetail({ auth, job }) {
                         </div>
                     </div>
                 </div>
+                <Modal maxWidth='sm' show={applying} onClose={closeModal}>
+                    {auth.user ?
+                        <>
+                            halo
+                        </>
+                        : isOnLoginModal ?
+
+                            <Login setIsOnLoginModal={setIsOnLoginModal} />
+                            :
+                            <Register setIsOnLoginModal={setIsOnLoginModal} />
+                    }
+                </Modal>
             </Homelayout>
         </>
     );

@@ -1,11 +1,11 @@
-import GuestLayout from '@/Layouts/GuestLayout';
+
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 
-export default function Register() {
+export default function Register({ setIsOnLoginModal }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         applicant_name: '',
         email: '',
@@ -22,9 +22,8 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
-            <Head title="Register" />
-
+        <div className="w-full  mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg ">
+            <div className='text-2xl font-bold mb-2 dark:text-gray-100 flex justify-center'>Register</div>
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="applicant_name" value="Applicant Name" />
@@ -95,18 +94,18 @@ export default function Register() {
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
-                    <Link
-                        href={route('login')}
+                    <button
+                        onClick={() => setIsOnLoginModal(true)}
                         className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                     >
                         Already registered?
-                    </Link>
+                    </button>
 
                     <PrimaryButton className="ms-4" disabled={processing}>
                         Register
                     </PrimaryButton>
                 </div>
             </form>
-        </GuestLayout>
+        </div>
     );
 }

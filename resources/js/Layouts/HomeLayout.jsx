@@ -5,9 +5,20 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { Toaster } from 'sonner';
+import Modal from '@/Components/Modal';
+import Login from '@/Components/Login';
+import Register from '@/Components/Register';
 export default function Homelayout({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isOnLoginModal, setIsOnLoginModal] = useState(true);
+    const closeModal = () => {
+        setIsOpen(false);
+    }
 
+    useState(() => {
+
+    }, [isOnLoginModal]);
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
             <Toaster richColors={true} />
@@ -69,12 +80,14 @@ export default function Homelayout({ user, header, children }) {
                                         </Dropdown>
                                     ) : (
                                         <div className='flex bg-blue-600 py-1 px-4 rounded-full'>
-                                            <NavLink href={route('login')} active={route().current('login')}>
+                                            <button className='flex' onClick={() => { setIsOpen(true) }}>
                                                 <span className="text-white">Login</span>
-                                            </NavLink>
-                                            <NavLink href={route('register')} active={route().current('register')}>
-                                                <span className="text-white">Register</span>
-                                            </NavLink>
+                                                <p className='dark:text-white'>
+                                                    &nbsp;{'/'}
+                                                    &nbsp;{'Register'}
+                                                </p>
+
+                                            </button>
                                         </div>
                                     )
                                 }
@@ -108,13 +121,9 @@ export default function Homelayout({ user, header, children }) {
                                 ) :
                                     (
                                         <div className='flex bg-blue-600 py-1 px-4 rounded-full'>
-                                            <NavLink href={route('login')} active={route().current('login')}>
-                                                <span className="text-white">Login</span>
-                                            </NavLink>
-                                            &nbsp;
-                                            <NavLink href={route('register')} active={route().current('register')}>
-                                                <span className="text-white">Register</span>
-                                            </NavLink>
+                                            <button onClick={() => { setIsOpen(true) }}>
+                                                <span className="text-white text-sm">Login</span>
+                                            </button>
                                         </div>
                                     )
                             }
@@ -152,6 +161,18 @@ export default function Homelayout({ user, header, children }) {
             )}
 
             <main>{children}</main>
+            <Modal maxWidth='sm' show={isOpen} onClose={closeModal}>
+                {user ?
+                    <>
+                        halo
+                    </>
+                    : isOnLoginModal ?
+
+                        <Login setIsOnLoginModal={setIsOnLoginModal} />
+                        :
+                        <Register setIsOnLoginModal={setIsOnLoginModal} />
+                }
+            </Modal>
         </div>
     );
 }

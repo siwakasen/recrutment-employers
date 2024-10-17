@@ -1,12 +1,12 @@
 import Checkbox from '@/Components/Checkbox';
-import GuestLayout from '@/Layouts/GuestLayout';
+// import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Login({ status, canResetPassword }) {
+export default function Login({ setIsOnLoginModal, status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -22,9 +22,8 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
-
+        <div className="w-full  mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg ">
+            <div className='text-2xl font-bold mb-2 dark:text-gray-100 flex justify-center'>Login</div>
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
             <form onSubmit={submit}>
@@ -90,13 +89,13 @@ export default function Login({ status, canResetPassword }) {
             </form>
             <div className="flex items-center justify-end mt-4 gap-1">
                 <span className="text-sm text-gray-600 dark:text-gray-400">Don't have an account?</span>
-                <Link
-                    href={route('register')}
+                <button
+                    onClick={() => setIsOnLoginModal(false)}
                     className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                 >
                     Register
-                </Link>
+                </button>
             </div>
-        </GuestLayout>
+        </div>
     );
 }
