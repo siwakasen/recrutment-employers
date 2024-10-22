@@ -5,7 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Link, useForm } from '@inertiajs/react';
 
-export default function Register({ setIsOnLoginModal }) {
+export default function Register({ setIsOnLoginModal, closeModal }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         applicant_name: '',
         email: '',
@@ -18,6 +18,9 @@ export default function Register({ setIsOnLoginModal }) {
 
         post(route('register'), {
             onFinish: () => reset('password', 'password_confirmation'),
+            onSuccess: () => {
+                closeModal();
+            }
         });
     };
 

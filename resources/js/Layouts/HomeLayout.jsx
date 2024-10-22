@@ -3,7 +3,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { Toaster } from 'sonner';
 import Modal from '@/Components/Modal';
 import Login from '@/Components/Login';
@@ -18,7 +18,9 @@ export default function Homelayout({ user, header, children, canResetPassword })
     }
 
     useState(() => {
-
+        if (user) {
+            setIsOpen(false);
+        }
     }, [isOnLoginModal]);
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -163,17 +165,15 @@ export default function Homelayout({ user, header, children, canResetPassword })
 
             <main>{children}</main>
             <Modal maxWidth='sm' show={isOpen} onClose={closeModal}>
-                {user ?
-                    <>
-                        halo
-                    </>
-                    : isOnLoginModal ?
+    {user ? <>
+            
+    </> : (
+        isOnLoginModal ?
+        <Login setIsOnLoginModal={setIsOnLoginModal} canResetPassword={canResetPassword} closeModal={closeModal} /> :
+        <Register setIsOnLoginModal={setIsOnLoginModal} closeModal={closeModal} />
+    )}
+</Modal>
 
-                        <Login setIsOnLoginModal={setIsOnLoginModal} canResetPassword={canResetPassword} />
-                        :
-                        <Register setIsOnLoginModal={setIsOnLoginModal} />
-                }
-            </Modal>
         </div>
     );
 }

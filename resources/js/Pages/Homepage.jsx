@@ -18,7 +18,7 @@ export default function Homepage({ auth, jobs, sentVerifMessage, canResetPasswor
         if (sentVerifMessage) {
             setShowModal(true);
         }
-    }, [sentVerifMessage]);
+    }, [sentVerifMessage]); 
 
     const searchFunctionHandler = (e) => {
         e.preventDefault();

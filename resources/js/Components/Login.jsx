@@ -5,7 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Login({ setIsOnLoginModal, status, canResetPassword }) {
+export default function Login({ setIsOnLoginModal, status, canResetPassword, closeModal }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -14,9 +14,11 @@ export default function Login({ setIsOnLoginModal, status, canResetPassword }) {
 
     const submit = (e) => {
         e.preventDefault();
-
         post(route('login'), {
             onFinish: () => reset('password'),
+            onSuccess: () => {
+                closeModal();
+            }
         });
     };
 
