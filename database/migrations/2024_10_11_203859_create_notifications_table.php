@@ -11,14 +11,6 @@ return new class extends Migration
      * 
      */
 
-    // Table notifications{
-    //     notification_id integer [primary key]
-    //     application_id integer
-    //     applicant_id integer
-    //     current_status string
-    //     message string
-    //     date_notification date
-    //   }
     public function up(): void
     {
         Schema::create('notifications', function (Blueprint $table) {

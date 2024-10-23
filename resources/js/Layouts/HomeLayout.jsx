@@ -85,7 +85,7 @@ export default function Homelayout({ user, header, children, canResetPassword })
                                         <div className='flex bg-blue-600 py-1 px-4 rounded-full'>
                                             <button className='flex' onClick={() => { setIsOpen(true) }}>
                                                 <span className="text-white">Login</span>
-                                                <p className='dark:text-white'>
+                                                <p className='text-white'>
                                                     &nbsp;{'/'}
                                                     &nbsp;{'Register'}
                                                 </p>

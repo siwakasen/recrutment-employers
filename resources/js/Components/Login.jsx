@@ -16,9 +16,9 @@ export default function Login({ setIsOnLoginModal, status, canResetPassword, clo
         e.preventDefault();
         post(route('login'), {
             onFinish: () => reset('password'),
-            onSuccess: () => {
-                closeModal();
-            }
+                onSuccess: () => {
+                    closeModal();
+                }
         });
     };
 

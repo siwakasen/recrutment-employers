@@ -13,7 +13,6 @@ class Application extends Model
         'job_id',
         'applicant_id',
         'status',
-        'message',
         'employment_contract',
     ];
 

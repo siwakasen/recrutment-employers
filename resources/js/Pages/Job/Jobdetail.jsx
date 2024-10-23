@@ -1,4 +1,4 @@
-import { Link, Head, router } from '@inertiajs/react';
+import { useForm, Head, router } from '@inertiajs/react';
 import Homelayout from '@/Layouts/HomeLayout';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -14,13 +14,25 @@ import { useState } from 'react';
 dayjs.extend(relativeTime);
 
 export default function Jobdetail({ auth, job, canResetPassword }) {
-
     const [isOnLoginModal, setIsOnLoginModal] = useState(true);
     const [applying, setApplying] = useState(false);
-
+    
     const closeModal = () => {
         setApplying(false);
     }
+    const { data, setData, post, processing, errors } = useForm({
+        job_id: job.id,
+        applicant_id: auth.user ? auth.user.id : "",
+
+    });
+    
+    
+    const applyJob = (e) => {
+        e.preventDefault();
+        router.post(route('job.apply', job.id), {
+        });
+    };
+
 
     useState(() => {
 
@@ -102,9 +114,13 @@ export default function Jobdetail({ auth, job, canResetPassword }) {
                 </div>
                 <Modal maxWidth='sm' show={applying} onClose={closeModal}>
                     {auth.user ?
-                        <>
-                            halo
-                        </>
+                        <div className="w-full  mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg ">
+                            <div className='text-2xl font-bold mb-2 dark:text-gray-100 flex justify-center'>Apply Job</div>
+                            <div className="mb-4 font-medium text-sm text-green-600 text-center">You are applying for <i className="font-bold">{job.job_name}</i></div>
+                            <div className='flex justify-center'>
+                                <button onClick={applyJob} className="bg-green-600 text-white px-2 py-2  hover:bg-green-700 focus:outline-none focus:ring-0 focus:ring-green-400" >Apply Now</button>
+                            </div>
+                        </div>
                         : isOnLoginModal ?
 
                             <Login setIsOnLoginModal={setIsOnLoginModal} canResetPassword={canResetPassword} />

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Job;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
@@ -17,6 +18,7 @@ class HomeController extends Controller
         if ($search) {
             $jobs = Job::with('jobType')
                 ->where('job_name', 'like', '%' . $search . '%')
+                ->where('date_expired', '>=', now())
                 ->orWhereHas('jobType', function ($query) use ($search) {
                     $query->where('job_type_name', 'like', '%' . $search . '%');
                 })
@@ -47,6 +49,7 @@ class HomeController extends Controller
         }
 
         $jobs = Job::with('jobType')
+            ->where('date_expired', '>=', now())
             ->paginate(10);
 
         if ($sentVerifMessage) {
@@ -64,6 +67,9 @@ class HomeController extends Controller
 
     public function detaill(Job $job)
     {
+        if($job->date_expired < now()){
+            abort(404);
+        }
         $job->load('jobType');
         return Inertia::render('Job/Jobdetail', [
             'job' => $job,
