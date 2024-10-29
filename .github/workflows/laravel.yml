@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: shivammathur/setup-php@v2 # Updated to latest major version
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
       - uses: actions/checkout@v4
