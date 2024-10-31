@@ -71,6 +71,12 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        if ($request->user()->curriculum_vitae) {
+            $path = $request->user()->curriculum_vitae;
+            $path = str_replace('/storage/', '', $path);
+            unlink(storage_path('app/public/' . $path));
+        }
+
         Auth::logout();
 
         $user->delete();

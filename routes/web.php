@@ -21,7 +21,7 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/jobs/{job}', [HomeController::class, 'detaill'])->name('jobs.detail');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified:'])->group(function () {
     Route::post('/apply', [ApplicationController::class, 'store'])->name('job.apply');
 });
 
@@ -30,8 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/cv', [ProfileController::class, 'storeCv'])->name('profile.cv.store');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    
 });
 
 
