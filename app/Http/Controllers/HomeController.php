@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Job;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\Application;
 use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
@@ -65,15 +66,24 @@ class HomeController extends Controller
         ]);
     }
 
-    public function detaill(Job $job)
+    public function detail(Job $job)
     {
-        if($job->date_expired < now()){
+        $user = auth()->user();
+        $isApplied = false;
+        if ($user) {
+            $application = Application::where('job_id', $job->job_id)
+                ->where('applicant_id', $user->applicant_id)
+                ->first();
+            if ($application) $isApplied = true;
+        }
+        if ($job->date_expired < now()) {
             abort(404);
         }
         $job->load('jobType');
         return Inertia::render('Job/Jobdetail', [
             'job' => $job,
             'canResetPassword' => Route::has('password.request'),
+            'isApplied' => $isApplied,
         ]);
     }
 }

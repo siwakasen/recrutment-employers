@@ -19,7 +19,7 @@ use App\Http\Controllers\HomeController;
 // });
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
-Route::get('/jobs/{job}', [HomeController::class, 'detaill'])->name('jobs.detail');
+Route::get('/jobs/{job}', [HomeController::class, 'detail'])->name('jobs.detail');
 
 Route::middleware(['auth', 'verified:'])->group(function () {
     Route::post('/apply', [ApplicationController::class, 'store'])->name('job.apply');

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('applicant_id');
             $table->foreign('applicant_id')->references('applicant_id')->on('applicants');
             $table->string('status');
-            $table->string('employment_contract');
+            $table->string('employment_contract')->nullable();
             $table->timestamps();
         });
     }

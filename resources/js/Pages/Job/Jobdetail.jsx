@@ -1,4 +1,4 @@
-import { useForm, Head, router } from "@inertiajs/react";
+import { useForm, Head, router, Link } from "@inertiajs/react";
 import Homelayout from "@/Layouts/HomeLayout";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -10,23 +10,43 @@ import Modal from "@/Components/Modal";
 import Login from "@/Components/Login";
 import Register from "@/Components/Register";
 import { useState } from "react";
+import { toast } from "sonner";
 dayjs.extend(relativeTime);
 
-export default function Jobdetail({ auth, job, canResetPassword }) {
+export default function Jobdetail({ auth, job, canResetPassword, isApplied }) {
+    console.log(isApplied);
     const [isOnLoginModal, setIsOnLoginModal] = useState(true);
-    const [applying, setApplying] = useState(false);
+    const [isApplyModal, setIsApplyModal] = useState(false);
+    const [status, setStatus] = useState("");
 
     const closeModal = () => {
-        setApplying(false);
+        setIsApplyModal(false);
     };
-    const { data, setData, post, processing, errors } = useForm({
-        job_id: job.id,
-        applicant_id: auth.user ? auth.user.id : "",
+    const { data, post, processing } = useForm({
+        job_id: job.job_id,
+        applicant_id: auth.user ? auth.user.applicant_id : "",
+        status: "waiting_approval",
     });
 
     const applyJob = (e) => {
         e.preventDefault();
-        router.post(route("job.apply", job.id), {});
+        post(route("job.apply", job.id), {
+            onSuccess: () => {
+                toast.success(
+                    `You have successfully applied for ${job.job_name}`,
+                );
+                setIsApplyModal(false);
+            },
+        });
+    };
+
+    const submitEmail = (e) => {
+        e.preventDefault();
+        post(route("verification.send"), {
+            onSuccess: () => {
+                setStatus("verification-link-sent");
+            },
+        });
     };
 
     useState(() => {}, [isOnLoginModal]);
@@ -97,11 +117,16 @@ export default function Jobdetail({ auth, job, canResetPassword }) {
                                         </p>
                                         <button
                                             onClick={() => {
-                                                setApplying(true);
+                                                setIsApplyModal(true);
                                             }}
-                                            className="bg-green-600 text-white px-2 py-2  hover:bg-green-700 focus:outline-none focus:ring-0 focus:ring-green-400"
+                                            disabled={isApplied}
+                                            className={` 
+                                                disabled:bg-slate-300
+                                                disabled:dark:bg-slate-700 bg-green-600 text-white px-2 py-2  hover:bg-green-700 focus:outline-none focus:ring-0 focus:ring-green-400`}
                                         >
-                                            Apply Now
+                                            {isApplied
+                                                ? "Already Apllied"
+                                                : "Apply"}
                                         </button>
                                     </div>
                                 </div>
@@ -149,27 +174,98 @@ export default function Jobdetail({ auth, job, canResetPassword }) {
                         </div>
                     </div>
                 </div>
-                <Modal maxWidth="sm" show={applying} onClose={closeModal}>
+                <Modal maxWidth="sm" show={isApplyModal} onClose={closeModal}>
                     {auth.user ? (
                         !auth.user.email_verified_at ? (
-                            <div>not verified</div>
-                        ) : // 'address' => ['nullable', 'string', 'max:255'],
-                        // 'phone' => ['nullable', 'string', 'max:15'],
-                        // 'portfolio' => ['nullable', 'string', 'url'], // Assuming this is a URL
-                        // 'gender' => ['nullable', 'in:man,woman'], // Add acceptable values
-                        // 'education' => ['nullable', 'string', 'max:255'],
-                        // 'work_experience' => ['nullable', 'integer', 'max:255'],
-                        // 'curriculum_vitae' => ['nullable', 'file', 'mimes:pdf'], // If uploading a file
-                        !auth.user.address ||
+                            <div className="w-full   px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg ">
+                                <div className="mb-4 text-sm text-gray-400">
+                                    Please verify your email first before apply
+                                </div>
+
+                                {status === "verification-link-sent" && (
+                                    <div className="mb-4 font-medium text-sm text-green-400">
+                                        A new verification link has been sent to
+                                        the email address you provided during
+                                        registration.
+                                    </div>
+                                )}
+                                <form onSubmit={submitEmail}>
+                                    <div className="mt-4 flex items-center justify-between">
+                                        <button
+                                            type="submit"
+                                            disabled={processing}
+                                            className="px-4 py-2 bg-blue-600 rounded-md text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-600"
+                                        >
+                                            {processing
+                                                ? "Please wait . . ."
+                                                : "Resend Verification Email"}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        ) : !auth.user.address ||
                           !auth.user.phone ||
                           !auth.user.portfolio ||
                           !auth.user.gender ||
                           !auth.user.education ||
                           !auth.user.work_experience ||
                           !auth.user.curriculum_vitae ? (
-                            <>list of incomplete data</>
+                            <div className="w-full  px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg ">
+                                <div className=" font-bold py-2 dark:text-gray-100 flex border-b-[0.5px]">
+                                    Incomplete data
+                                </div>
+                                <div className="py-3 px-2">
+                                    {/* make a list */}
+                                    <ul className="list-disc pl-5 dark:text-white">
+                                        {!auth.user.address && <li>Address</li>}
+                                        {!auth.user.phone && <li>Phone</li>}
+                                        {!auth.user.portfolio && (
+                                            <li>Portfolio</li>
+                                        )}
+                                        {!auth.user.gender && <li>Gender</li>}
+                                        {!auth.user.education && (
+                                            <li>Education</li>
+                                        )}
+                                        {!auth.user.work_experience && (
+                                            <li>Work Experience</li>
+                                        )}
+                                        {!auth.user.curriculum_vitae && (
+                                            <li>Curriculum Vitae</li>
+                                        )}
+                                    </ul>
+                                </div>
+                                <div className="flex justify-end">
+                                    <Link
+                                        href={route("profile.edit")}
+                                        className="bg-blue-600 text-white px-2 py-1 rounded-md  hover:bg-blue-700 focus:outline-none focus:ring-0 focus:ring-blue-400"
+                                    >
+                                        Update Profile
+                                    </Link>
+                                </div>
+                            </div>
                         ) : (
-                            <></>
+                            <div className="w-full  mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg ">
+                                <div className="text-2xl font-bold mb-2 dark:text-gray-100 flex justify-center">
+                                    Apply Job
+                                </div>
+                                <div className="mb-4 font-medium text-sm text-green-600 text-center">
+                                    You are applying for{" "}
+                                    <i className="font-bold">{job.job_name}</i>
+                                </div>
+                                <div className="flex justify-center">
+                                    <form onSubmit={applyJob}>
+                                        <button
+                                            type="submit"
+                                            disabled={processing}
+                                            className="bg-green-600 text-white px-2 py-2  hover:bg-green-700 focus:outline-none focus:ring-0 focus:ring-green-400"
+                                        >
+                                            {processing
+                                                ? "Please wait . . ."
+                                                : "Apply Now"}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         )
                     ) : isOnLoginModal ? (
                         <Login

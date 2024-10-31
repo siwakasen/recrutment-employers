@@ -31,7 +31,7 @@ export const menu = (role_id) => {
             {
                 name: 'Admin',
                 href: route('administrator.index'),
-                current: route().current('administrator.index') || route().current('administrator.search') || route().current('administrator.create'),
+                current: route().current('administrator.index') || route().current('administrator.search') || route().current('administrator.create') || route().current('administrator.edit'),
             },
             {
                 name: 'Jobs',
