@@ -21,4 +21,34 @@ class ApplicationController extends Controller
 
         return redirect()->back();
     }
+
+    public function show(Request $request)
+    {
+        $user = $request->user();
+        $search = $request->input('search');
+        if($search) {
+            $applications = Application::with(['job' => function ($query) {
+                $query->with('jobType');
+            }])
+                ->where('applicant_id', $user->applicant_id)
+                ->whereHas('job', function ($query) use ($search) {
+                    $query->where('job_name', 'like', '%' . $search . '%');
+                })
+                ->paginate(10)
+                ->appends(['search' => $search]);
+            return Inertia::render('Applications/Index', [
+                'applications' => $applications,
+                'search' => $search,
+            ]);
+        }
+        $applications = Application::with(['job' => function ($query) {
+            $query->with('jobType');
+        }])
+            ->where('applicant_id', $user->applicant_id)
+            ->paginate(10);
+        
+        return Inertia::render('Applications/Index', [
+            'applications' => $applications,
+        ]);
+    }
 }

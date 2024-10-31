@@ -1,12 +1,19 @@
 import { toast } from 'sonner';
-export const userMenu = [
-    {
-        name: 'Job List',
-        href: route('home.index'),
-        current: route().current('home.index') || route().current('home.search') || route().current('jobs.detail'),
-    }
+export const userMenu = () =>{
+    return [
+        {
+            name: 'Dashboard',
+            href: route('home.index'),
+            current: route().current('home.index') || route().current('home.search') || route().current('jobs.detail'),
+        },
+        {
+            name: 'Applied',
+            href: route('applications.show'),
+            current: route().current('applications.show'),
+        }
+    ];
+}
 
-];
 export const menu = (role_id) => {
     if (role_id === 1) {
         return [

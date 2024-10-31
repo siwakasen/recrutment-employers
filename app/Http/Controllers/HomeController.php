@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Job;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
 use App\Models\Application;
 use Illuminate\Support\Facades\Route;
 
@@ -85,5 +83,11 @@ class HomeController extends Controller
             'canResetPassword' => Route::has('password.request'),
             'isApplied' => $isApplied,
         ]);
+    }
+
+    public function revert(Request $request)
+    {
+        $request->session()->forget('sentVerifMessage');
+        return redirect()->route('home.index');
     }
 }

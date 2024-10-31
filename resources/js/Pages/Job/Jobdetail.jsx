@@ -14,7 +14,7 @@ import { toast } from "sonner";
 dayjs.extend(relativeTime);
 
 export default function Jobdetail({ auth, job, canResetPassword, isApplied }) {
-    console.log(isApplied);
+    console.log(route().current());
     const [isOnLoginModal, setIsOnLoginModal] = useState(true);
     const [isApplyModal, setIsApplyModal] = useState(false);
     const [status, setStatus] = useState("");

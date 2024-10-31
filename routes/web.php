@@ -1,22 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\HomeController;
-
-// Route::get('/', function () {
-// return Inertia::render('Welcome', [
-//     'canLogin' => Route::has('login'),
-//     'canRegister' => Route::has('register'),
-//     'laravelVersion' => Application::VERSION,
-//     'phpVersion' => PHP_VERSION,
-// ]);
-// });
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/jobs/{job}', [HomeController::class, 'detail'])->name('jobs.detail');
@@ -30,6 +21,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/cv', [ProfileController::class, 'storeCv'])->name('profile.cv.store');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    Route:: get('/applications', [ApplicationController::class, 'show'])->name('applications.show');
+
 });
 
 

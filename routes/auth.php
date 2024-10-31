@@ -42,7 +42,7 @@ Route::middleware('guest.administrator')->group(function () {
         Route::get('login', [AdministratorController::class, 'loginview'])
             ->name('administrator.login');
         Route::post('login', [AdministratorController::class, 'login'])
-            ->name('administrator.login');
+            ->name('administrator.signin');
     });
 });
 
