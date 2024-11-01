@@ -122,7 +122,7 @@ export default function Jobdetail({ auth, job, canResetPassword, isApplied }) {
                                             disabled={isApplied}
                                             className={` 
                                                 disabled:bg-slate-300
-                                                disabled:dark:bg-slate-700 bg-green-600 text-white px-2 py-2  hover:bg-green-700 focus:outline-none focus:ring-0 focus:ring-green-400`}
+                                                disabled:dark:bg-slate-700 bg-green-600 text-gray-200 px-2 py-2  hover:bg-green-700 focus:outline-none focus:ring-0 focus:ring-green-400`}
                                         >
                                             {isApplied
                                                 ? "Already Apllied"

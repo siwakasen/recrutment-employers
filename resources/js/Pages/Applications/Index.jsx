@@ -9,10 +9,12 @@ import { IoPeople } from "react-icons/io5";
 import { MdLocalOffer } from "react-icons/md";
 import { PiBagSimpleFill } from "react-icons/pi";
 import { MdCancel } from "react-icons/md";
+import Modal from "@/Components/Modal";
 dayjs.extend(relativeTime);
 
 export default function Index({ auth, applications }) {
-    const { post, processing } = useForm({});
+    const { data, put, processing, setData } = useForm({});
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchInput, setSearchInput] = useState("");
     const stages = [
         {
@@ -47,7 +49,20 @@ export default function Index({ auth, applications }) {
             textcolor: "text-green-600",
             icon: <PiBagSimpleFill />,
         },
+        {
+            id: "rejected",
+            label: "Rejected",
+            roundColor: "bg-red-500",
+            bgcolor: "bg-red-100",
+            textcolor: "text-red-600",
+            icon: <MdCancel />,
+        },
     ];
+
+    const submit = (e) => {
+        e.preventDefault();
+        put(route(""), {});
+    };
 
     const searchFunctionHandler = (e) => {
         e.preventDefault();
@@ -59,6 +74,15 @@ export default function Index({ auth, applications }) {
             preserveScroll: true,
             replace: true,
         });
+    };
+
+    const openModal = (application) => {
+        setData(application);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
     };
 
     // Roadmap component
@@ -78,13 +102,13 @@ export default function Index({ auth, applications }) {
                             className={`w-4 h-4 rounded-full ${
                                 index <= currentStageIndex
                                     ? stage.roundColor
-                                    : "bg-gray-300"
+                                    : "bg-gray-300 dark:bg-gray-100"
                             }`}
                         ></div>
 
                         {/* Label for each stage */}
                         <div className="ml-2 text-center">
-                            <p className="text-sm font-semibold">
+                            <p className="text-sm font-semibold dark:text-gray-100">
                                 {stage.label}
                             </p>
                         </div>
@@ -92,7 +116,7 @@ export default function Index({ auth, applications }) {
                         {/* Line between stages */}
                         {index < stages.length - 1 && (
                             <div
-                                className={`w-10 h-[2px] mx-1 bg-gray-300`}
+                                className={`w-10 h-[2px] mx-1 bg-gray-300 dark:bg-gray-100`}
                             ></div>
                         )}
                     </div>
@@ -142,22 +166,20 @@ export default function Index({ auth, applications }) {
 
                         <div className="px-4 lg:px-0">
                             {applications.data.map((application, index) => (
-                                <div
+                                <button
                                     key={index}
-                                    className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 mb-4 border border-gray-200 dark:border-none hover:shadow-lg transition-shadow"
+                                    className="w-full"
+                                    onClick={() => {
+                                        openModal(application);
+                                    }}
                                 >
-                                    <Link
-                                        href={route(
-                                            "jobs.detail",
-                                            application.job,
-                                        )}
-                                    >
+                                    <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 mb-4 border border-gray-200 dark:border-none hover:shadow-lg transition-shadow w-full ">
                                         <div className="flex justify-between items-center">
                                             <span className="text-xl font-bold dark:text-gray-300 flex flex-col lg:flex-row gap-1">
                                                 <span>
                                                     {application.job.job_name}
                                                 </span>
-                                                <span className="text-gray-400 text-xs mt-1">
+                                                <span className="text-gray-400 text-xs mt-1 text-start">
                                                     Click for details
                                                 </span>
                                             </span>
@@ -169,7 +191,7 @@ export default function Index({ auth, applications }) {
                                                 </div>
                                             ) : (
                                                 <>
-                                                    <div className="hidden lg:block px-2 py-1 bg-gray-100 rounded-lg">
+                                                    <div className="hidden lg:block px-2 py-1 bg-gray-100 dark:bg-gray-600 rounded-lg">
                                                         <ApplicationRoadmap
                                                             status={
                                                                 application.status
@@ -205,18 +227,55 @@ export default function Index({ auth, applications }) {
                                                 </>
                                             )}
                                         </div>
-                                        <p className="text-gray-500 dark:text-gray-300 mt-1 text-sm">
+                                        <p className="text-gray-500 dark:text-gray-300 mt-1 text-sm text-start">
                                             Applied on{" "}
                                             {dayjs(
                                                 application.created_at,
                                             ).fromNow()}
                                         </p>
-                                    </Link>
-                                </div>
+                                    </div>
+                                </button>
                             ))}
                         </div>
                     </div>
                 </div>
+                <Modal maxWidth="sm" show={isModalOpen} onClose={closeModal}>
+                    <div className="w-full   px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg ">
+                        <div className=" text-white ">
+                            <div className="text-center text-md text-gray-200 border-b p-3 border-slate-600">
+                                Your current application status is{" "}
+                                {stages
+                                    .filter((stage) =>
+                                        data.status === "approved"
+                                            ? stage.id === "interview"
+                                            : stage.id === data.status,
+                                    )
+                                    .map((stage) => (
+                                        <span
+                                            key={stage.id}
+                                            className={`gap-2 px-1 py-0.5 rounded font-extrabold text-sm ${stage.bgcolor} ${stage.textcolor}`}
+                                        >
+                                            <span>{stage.label}</span>
+                                        </span>
+                                    ))}
+                            </div>
+
+                            <form onSubmit={submit} className="pb-10 pt-2 px-4">
+                                <div className="text-start text-sm text-gray-200">
+                                    Do you want to cancel your application?
+                                </div>
+                            </form>
+                            <div className="flex items-center justify-end ">
+                                <button
+                                    onClick={closeModal}
+                                    className="mt-4 px-2 py-1 bg-gray-600 rounded-md text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
             </Homelayout>
         </>
     );
