@@ -44,7 +44,7 @@ class ProfileController extends Controller
     public function storeCv(Request $request): RedirectResponse
     {
         $request->validate([
-            'curriculum_vitae' => ['required', 'file', 'mimes:pdf', 'max:1024'],
+            'curriculum_vitae' => ['required', 'file', 'mimes:pdf'],
         ]);
         if ($request->user()->curriculum_vitae) {
             $path = $request->user()->curriculum_vitae;

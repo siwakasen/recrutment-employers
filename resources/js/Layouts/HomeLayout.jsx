@@ -238,7 +238,7 @@ export default function Homelayout({
                 ) : (
                     <Register
                         setIsOnLoginModal={setIsOnLoginModal}
-                        closeModal={closeModal()}
+                        closeModal={closeModal}
                     />
                 )}
             </Modal>

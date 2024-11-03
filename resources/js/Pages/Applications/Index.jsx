@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Head, useForm, router } from "@inertiajs/react";
+import { Head, useForm, router } from "@inertiajs/react";
 import Homelayout from "@/Layouts/HomeLayout";
 import PaginationCool from "@/Components/PaginationCool";
 import dayjs from "dayjs";
@@ -10,10 +10,13 @@ import { MdLocalOffer } from "react-icons/md";
 import { PiBagSimpleFill } from "react-icons/pi";
 import { MdCancel } from "react-icons/md";
 import Modal from "@/Components/Modal";
+import { toast } from "sonner";
+import UploadContractForm from "@/Components/Applications/UploadContractForm";
 dayjs.extend(relativeTime);
 
 export default function Index({ auth, applications }) {
-    const { data, put, processing, setData } = useForm({});
+    const { data, delete: post, processing, setData } = useForm({});
+    const [confirming, setConfirming] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchInput, setSearchInput] = useState("");
     const stages = [
@@ -49,19 +52,21 @@ export default function Index({ auth, applications }) {
             textcolor: "text-green-600",
             icon: <PiBagSimpleFill />,
         },
-        {
-            id: "rejected",
-            label: "Rejected",
-            roundColor: "bg-red-500",
-            bgcolor: "bg-red-100",
-            textcolor: "text-red-600",
-            icon: <MdCancel />,
-        },
     ];
 
     const submit = (e) => {
         e.preventDefault();
-        put(route(""), {});
+        if (!confirming) {
+            setConfirming(true);
+            return;
+        }
+        post(route("application.cancel", data), {
+            onSuccess: () => {
+                setConfirming(false);
+                setIsModalOpen(false);
+                toast.success("Your application has been cancelled.");
+            },
+        });
     };
 
     const searchFunctionHandler = (e) => {
@@ -83,12 +88,13 @@ export default function Index({ auth, applications }) {
 
     const closeModal = () => {
         setIsModalOpen(false);
+        setConfirming(false);
     };
 
     // Roadmap component
     const ApplicationRoadmap = ({ status }) => {
-        // approved status is showed as interview for the user
-        if (status === "approved") status = "interview";
+        // accepted status is showed as interview for the user
+        if (status === "accepted") status = "interview";
         const currentStageIndex = stages.findIndex(
             (stage) => stage.id === status,
         );
@@ -100,7 +106,7 @@ export default function Index({ auth, applications }) {
                         {/* Circle for each stage */}
                         <div
                             className={`w-4 h-4 rounded-full ${
-                                index <= currentStageIndex
+                                index === currentStageIndex
                                     ? stage.roundColor
                                     : "bg-gray-300 dark:bg-gray-100"
                             }`}
@@ -113,12 +119,14 @@ export default function Index({ auth, applications }) {
                             </p>
                         </div>
 
-                        {/* Line between stages */}
-                        {index < stages.length - 1 && (
-                            <div
-                                className={`w-10 h-[2px] mx-1 bg-gray-300 dark:bg-gray-100`}
-                            ></div>
-                        )}
+                        {
+                            // Don't show the last line if it's the last stage
+                            index === stages.length - 1 ? null : (
+                                <div
+                                    className={`w-10 h-[2px] mx-1 bg-gray-300 dark:bg-gray-100`}
+                                ></div>
+                            )
+                        }
                     </div>
                 ))}
             </div>
@@ -127,7 +135,7 @@ export default function Index({ auth, applications }) {
 
     return (
         <>
-            <Head title="Homepage" />
+            <Head title="Applications" />
             <Homelayout user={auth.user ? auth.user : ""} canResetPassword={""}>
                 <img
                     src="/images/rec_banners_2.jpg"
@@ -169,6 +177,10 @@ export default function Index({ auth, applications }) {
                                 <button
                                     key={index}
                                     className="w-full"
+                                    disabled={
+                                        application.status === "rejected" ||
+                                        application.status === "cancelled"
+                                    }
                                     onClick={() => {
                                         openModal(application);
                                     }}
@@ -179,15 +191,26 @@ export default function Index({ auth, applications }) {
                                                 <span>
                                                     {application.job.job_name}
                                                 </span>
-                                                <span className="text-gray-400 text-xs mt-1 text-start">
-                                                    Click for details
-                                                </span>
+                                                {application.status !==
+                                                    "rejected" &&
+                                                    application.status !==
+                                                        "cancelled" && (
+                                                        <span className="text-gray-400 text-xs mt-1 text-start">
+                                                            Click for details
+                                                        </span>
+                                                    )}
                                             </span>
                                             {application.status ===
                                             "rejected" ? (
                                                 <div className=" text-red-600 text-sm bg-red-100 px-2 py-1 rounded font-extrabold flex items-center gap-2">
                                                     <MdCancel />
                                                     Rejected
+                                                </div>
+                                            ) : application.status ===
+                                              "cancelled" ? (
+                                                <div className=" text-red-600 text-sm bg-red-100 px-2 py-1 rounded font-extrabold flex items-center gap-2">
+                                                    <MdCancel />
+                                                    Cancelled
                                                 </div>
                                             ) : (
                                                 <>
@@ -202,7 +225,7 @@ export default function Index({ auth, applications }) {
                                                         {stages
                                                             .filter((stage) =>
                                                                 application.status ===
-                                                                "approved"
+                                                                "accepted"
                                                                     ? stage.id ===
                                                                       "interview"
                                                                     : stage.id ===
@@ -239,14 +262,14 @@ export default function Index({ auth, applications }) {
                         </div>
                     </div>
                 </div>
-                <Modal maxWidth="sm" show={isModalOpen} onClose={closeModal}>
+                <Modal maxWidth="md" show={isModalOpen} onClose={closeModal}>
                     <div className="w-full   px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg ">
                         <div className=" text-white ">
                             <div className="text-center text-md text-gray-200 border-b p-3 border-slate-600">
-                                Your current application status is{" "}
+                                Current application status is{" "}
                                 {stages
                                     .filter((stage) =>
-                                        data.status === "approved"
+                                        data.status === "accepted"
                                             ? stage.id === "interview"
                                             : stage.id === data.status,
                                     )
@@ -259,13 +282,29 @@ export default function Index({ auth, applications }) {
                                         </span>
                                     ))}
                             </div>
+                            {data.status === "offered" ||
+                            data.status === "hired" ? (
+                                <>
+                                    <UploadContractForm application={data} />
+                                </>
+                            ) : null}
 
-                            <form onSubmit={submit} className="pb-10 pt-2 px-4">
-                                <div className="text-start text-sm text-gray-200">
-                                    Do you want to cancel your application?
-                                </div>
-                            </form>
-                            <div className="flex items-center justify-end ">
+                            <div className="flex items-center justify-between mt-4">
+                                <form onSubmit={submit} className="">
+                                    <div className="flex items-center ">
+                                        {data.status !== "hired" && (
+                                            <button
+                                                disabled={processing}
+                                                type="submit"
+                                                className="mt-4 px-2 py-1 text-sm bg-red-600 rounded-md text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >
+                                                {confirming
+                                                    ? "Click again to confirm your cancellation"
+                                                    : "Cancel Application"}
+                                            </button>
+                                        )}
+                                    </div>
+                                </form>
                                 <button
                                     onClick={closeModal}
                                     className="mt-4 px-2 py-1 bg-gray-600 rounded-md text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
