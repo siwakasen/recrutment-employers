@@ -58,6 +58,7 @@ Route::prefix('administrator')->group(function () {
             Route::put('/jobs/{job}', [JobController::class, 'update'])->name('jobs.update');
 
             Route::patch('/applications/{application}', [ApplicationController::class, 'update'])->name('applications.update');
+            Route::post('/applications/with-contract/{application}', [ApplicationController::class, 'updateWithContract'])->name('application.update-with-contract');
         });
     });
 });

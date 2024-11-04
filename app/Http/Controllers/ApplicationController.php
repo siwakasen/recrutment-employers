@@ -111,6 +111,7 @@ class ApplicationController extends Controller
     
     public function update(Request $request, Application $application): RedirectResponse
     {
+        dd($request->all());
         $request->validate([
             'status' => "required|in:rejected,interview,offered,hired",
         ]);
@@ -119,11 +120,30 @@ class ApplicationController extends Controller
             $request->validate([
                 'interview_link' => 'required|url',
             ]);
+            // send link to email if status is interview
         }
+
+        if($request->status === 'hired') {
+            // send announcement to email
+            
+        }
+
 
         $application->update($request->only('status'));
 
         return redirect()->back();
+    }
+
+    public function updateWithContract(Request $request, Application $application): RedirectResponse
+    {
+        $request->validate([
+            'status' => "required|in:offered,hired",
+            'employment_contract' => ['required', 'file', 'mimes:pdf, doc, docx'],
+        ]);
+
+        // send file to email
+
+        $application->update($request->only('status'));
     }
 
 

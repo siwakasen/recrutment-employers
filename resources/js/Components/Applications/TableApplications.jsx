@@ -15,7 +15,7 @@ export default function TableApplications({ applications, role_id }) {
     const [expandedApplicants, setExpandedApplicants] = useState([]);
     const [application, setApplication] = useState({});
     const [openModal, setOpenModal] = useState(false);
-    const { data, setData, patch, errors, processing, reset } = useForm({
+    const { data, setData, patch, errors, processing, reset, post } = useForm({
         status: "",
         interview_link: "",
         employment_contract: null,
@@ -23,6 +23,7 @@ export default function TableApplications({ applications, role_id }) {
 
     const closeModal = () => {
         setOpenModal(false);
+        reset("employment_contract");
     };
 
     const changeStatus = (e) => {
@@ -38,6 +39,37 @@ export default function TableApplications({ applications, role_id }) {
                 },
                 onFinish: () => {
                     closeModal();
+                },
+            });
+            return;
+        }
+        if (data.employment_contract) {
+            const formData = new FormData();
+            Object.keys(data).forEach((key) => {
+                formData.append(key, data[key]);
+            });
+
+            post(route("application.update-with-contract", application), {
+                data: formData,
+                preserveScroll: true,
+                forceFormData: true,
+                onSuccess: () => {
+                    toast.success("Status updated successfully.");
+                    closeModal();
+                },
+                onError: (errors) => {
+                    console.log(errors);
+                    if (errors.interview_link) {
+                        interviewLink.current.focus();
+                        reset("interview_link");
+                    } else if (errors.employment_contract) {
+                        toast.error(
+                            "Error on uploading the employment contract.",
+                        );
+                    } else {
+                        toast.error(errors.status);
+                        closeModal();
+                    }
                 },
             });
             return;
@@ -486,48 +518,49 @@ export default function TableApplications({ applications, role_id }) {
                         />
                     )}
                     <form onSubmit={changeStatus}>
-                        {application.status === "waiting_approval" && (
-                            <div className="mb-6 mt-3">
-                                <label
-                                    htmlFor="interview_link"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-400"
-                                >
-                                    Input the interview link
-                                </label>
-                                <div className="flex items-center">
-                                    <TextInput
-                                        ref={interviewLink}
-                                        type="text"
-                                        id="interview_link"
-                                        name="interview_link"
-                                        value={data.interview_link}
-                                        onChange={(e) =>
-                                            setData(
-                                                "interview_link",
-                                                e.target.value,
-                                            )
-                                        }
-                                        className="mt-1 block w-full border-gray-300 dark:bg-gray-600 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={async () => {
-                                            const text =
-                                                await navigator.clipboard.readText();
-                                            setData("interview_link", text);
-                                        }}
-                                        className="ml-2 p-2 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-400 dark:hover:bg-gray-600 focus:outline-none"
-                                        title="Paste from clipboard"
+                        {application.status === "waiting_approval" &&
+                            data.status === "interview" && (
+                                <div className="mb-6 mt-3">
+                                    <label
+                                        htmlFor="interview_link"
+                                        className="block text-sm font-medium text-gray-700 dark:text-gray-400"
                                     >
-                                        <FaPaste size={16} />
-                                    </button>
+                                        Input the interview link
+                                    </label>
+                                    <div className="flex items-center">
+                                        <TextInput
+                                            ref={interviewLink}
+                                            type="text"
+                                            id="interview_link"
+                                            name="interview_link"
+                                            value={data.interview_link}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "interview_link",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="mt-1 block w-full border-gray-300 dark:bg-gray-600 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                const text =
+                                                    await navigator.clipboard.readText();
+                                                setData("interview_link", text);
+                                            }}
+                                            className="ml-2 p-2 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-400 dark:hover:bg-gray-600 focus:outline-none"
+                                            title="Paste from clipboard"
+                                        >
+                                            <FaPaste size={16} />
+                                        </button>
+                                    </div>
+                                    <InputError
+                                        message={errors.interview_link}
+                                        className="mt-2"
+                                    />
                                 </div>
-                                <InputError
-                                    message={errors.interview_link}
-                                    className="mt-2"
-                                />
-                            </div>
-                        )}
+                            )}
 
                         <div className="mt-4 flex justify-end">
                             <SecondaryButton onClick={closeModal}>
