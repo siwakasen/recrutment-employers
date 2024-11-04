@@ -27,6 +27,11 @@ export const menu = (role_id) => {
                 href: route('jobs.index'),
                 current: route().current('jobs.index') || route().current('jobs.search') || route().current('jobs.create') || route().current('jobs.edit'),
             },
+            {
+                name: 'Applications',
+                href: route('applications.index'),
+                current: route().current('applications.index') || route().current('applications.search'),
+            }
         ]
     } else {
         return [
@@ -45,6 +50,11 @@ export const menu = (role_id) => {
                 href: route('jobs.index'),
                 current: route().current('jobs.index'),
             },
+            {
+                name: 'Applications',
+                href: route('applications.index'),
+                current: route().current('applications.index') || route().current('applications.search'),
+            }
         ]
     }
 }

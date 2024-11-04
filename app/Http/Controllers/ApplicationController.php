@@ -46,6 +46,8 @@ class ApplicationController extends Controller
 
         return redirect()->back();
     }
+
+
     public function show(Request $request)
     {
         $user = $request->user();
@@ -77,11 +79,41 @@ class ApplicationController extends Controller
     }
     
     // for administrators
+    public function showAll(Request $request)
+    {
+        $search = $request->input('search');
+        if($search) {
+            $applications = Application::with(['job' => function ($query) {
+                $query->with('jobType');
+            }, 'applicant'])
+                ->whereHas('job', function ($query) use ($search) {
+                    $query->where('job_name', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('applicant', function ($query) use ($search) {
+                    $query->where('applicant_name', 'like', '%' . $search . '%');
+                })
+                ->paginate(10)
+                ->appends(['search' => $search]);
+            return Inertia::render('Administrator/Applications/Index', [
+                'applications' => $applications,
+                'search' => $search,
+            ]);
+        }
+        $applications = Application::with(['job' => function ($query) {
+            $query->with('jobType');
+        },'applicant'])
+            ->paginate(10);
+        
+        return Inertia::render('Administrator/Applications/Index', [
+            'applications' => $applications,
+        ]);
+    }
+    
     public function update(Request $request, Application $application): RedirectResponse
     {
         $request->validate([
-            'status' => 'required| in:rejected, interview, offered, hired',
-        ]);
+            'status' => "required|in:rejected,interview,offered,hired",
+        ]);        
 
         $application->update($request->only('status'));
 
@@ -91,7 +123,10 @@ class ApplicationController extends Controller
 
     public function acceptByExecutive(Request $request, Application $application): RedirectResponse
     {
-        $application->update(['status' => 'accepted']);
+        $request->validate([
+            'status' => "required|in:accepted,rejected",
+        ]);  
+        $application->update($request->only('status'));
 
         return redirect()->back();
     }

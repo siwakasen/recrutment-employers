@@ -6,8 +6,14 @@ import TableJob from "@/Components/Job/TableJob";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { toastTypes } from "@/Constants/constants";
+import TableApplications from "@/Components/Applications/TableApplications";
 
-export default function JobIndex({ administrator, jobs, search, message }) {
+export default function ApplicationIndex({
+    administrator,
+    applications,
+    search,
+    message,
+}) {
     const isFirstRender = useRef(true);
     const [searchInput, setSearchInput] = useState(search || "");
     useEffect(() => {
@@ -16,10 +22,10 @@ export default function JobIndex({ administrator, jobs, search, message }) {
             return;
         }
         const delayDebounceFn = setTimeout(() => {
-            router.visit(route("jobs.index"), {
+            router.visit(route("applications.index"), {
                 method: "get",
                 data: { search: searchInput },
-                only: ["jobs"],
+                only: ["applications"],
                 preserveState: true,
                 preserveScroll: true,
                 replace: true,
@@ -43,41 +49,33 @@ export default function JobIndex({ administrator, jobs, search, message }) {
             user={administrator.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Jobs
+                    Applications
                 </h2>
             }
         >
-            <Head title="Jobs" />
+            <Head title="Applications" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <label className="p-2 text-lg font-semibold dark:text-slate-200">
-                        Total Jobs: {jobs.total}
+                        Total Applications: {applications.total}
                     </label>
-                    <div className="p-2 flex">
+                    <div className="p-2 grid grid-cols-2">
                         <input
                             type="text"
                             value={searchInput}
                             onChange={(e) => setSearchInput(e.target.value)}
-                            placeholder="Search Jobs"
-                            className="border border-gray-200 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            placeholder="Search..."
+                            className="p-2 border border-gray-300 dark:border-slate-600 rounded-md flex-1"
                         />
-                        {administrator.user.role.role_id === 1 ? (
-                            <Link
-                                href={route("jobs.create")}
-                                className="ml-auto bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded"
-                            >
-                                Create Jobs
-                            </Link>
-                        ) : (
-                            <></>
-                        )}
                     </div>
                     <div className="overflow-auto dark:bg-gray-700 w-full shadow-sm sm:rounded-t-lg">
-                        <TableJob jobs={jobs} />
+                        <TableApplications
+                            applications={applications.data}
+                            role_id={administrator.user.role_id}
+                        />
                     </div>
-
-                    <Pagination links={jobs.links} search={searchInput} />
+                    <Pagination links={applications.links} />
                 </div>
             </div>
         </AdministratorLayout>

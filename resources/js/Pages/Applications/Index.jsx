@@ -265,7 +265,7 @@ export default function Index({ auth, applications }) {
                 <Modal maxWidth="md" show={isModalOpen} onClose={closeModal}>
                     <div className="w-full   px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg ">
                         <div className=" text-white ">
-                            <div className="text-center text-md text-gray-200 border-b p-3 border-slate-600">
+                            <div className="text-center text-md text-gray-900 dark:text-gray-200 border-b p-3 border-slate-600">
                                 Current application status is{" "}
                                 {stages
                                     .filter((stage) =>

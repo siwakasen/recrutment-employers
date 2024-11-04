@@ -36,6 +36,7 @@ Route::prefix('administrator')->group(function () {
         Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
         Route::get('/change-password', [AdministratorController::class, 'editPassword'])->name('administrator.password.edit');
         Route::patch('/password/update', [AdministratorController::class, 'updatePassword'])->name('administrator.password.update');
+        Route::get('/applications', [ApplicationController::class, 'showAll'])->name('applications.index');
 
         Route::middleware('executive')->group(function () {
             Route::get('/index', [AdministratorController::class, 'index'])->name('administrator.index');
@@ -45,6 +46,8 @@ Route::prefix('administrator')->group(function () {
             Route::get('/{administrator}/edit', [AdministratorController::class, 'edit'])->name('administrator.edit');
             Route::patch('/{administrator}', [AdministratorController::class, 'update'])->name('administrator.update');
             Route::get('/search', [AdministratorController::class, 'search'])->name('administrator.search');
+
+            Route::patch('/applications/accept/{application}', [ApplicationController::class, 'acceptByExecutive'])->name('applications.accept');
         });
 
         Route::middleware('hr')->group(function () {
@@ -53,6 +56,8 @@ Route::prefix('administrator')->group(function () {
             Route::delete('/jobs/{job}', [JobController::class, 'destroy'])->name('jobs.destroy');
             Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])->name('jobs.edit');
             Route::put('/jobs/{job}', [JobController::class, 'update'])->name('jobs.update');
+
+            Route::patch('/applications/{application}', [ApplicationController::class, 'update'])->name('applications.update');
         });
     });
 });
