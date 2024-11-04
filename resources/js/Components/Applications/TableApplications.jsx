@@ -1,17 +1,24 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useRef } from "react";
 import DangerButton from "@/Components/DangerButton";
 import { useForm } from "@inertiajs/react";
 import PrimaryButton from "@/Components/PrimaryButton";
 import { toast } from "sonner";
 import SecondaryButton from "../SecondaryButton";
 import Modal from "@/Components/Modal";
+import { FaPaste } from "react-icons/fa";
+import TextInput from "@/Components/TextInput";
+import InputError from "@/Components/InputError";
+import UploadContractForm from "./UploadContractForm";
+
 export default function TableApplications({ applications, role_id }) {
-    console.log(role_id);
+    const interviewLink = useRef();
     const [expandedApplicants, setExpandedApplicants] = useState([]);
     const [application, setApplication] = useState({});
     const [openModal, setOpenModal] = useState(false);
-    const { data, setData, patch, errors, processing } = useForm({
+    const { data, setData, patch, errors, processing, reset } = useForm({
         status: "",
+        interview_link: "",
+        employment_contract: null,
     });
 
     const closeModal = () => {
@@ -26,7 +33,7 @@ export default function TableApplications({ applications, role_id }) {
                 onSuccess: () => {
                     toast.success("Status updated successfully.");
                 },
-                onError: () => {
+                onError: (errors) => {
                     toast.error(errors.status);
                 },
                 onFinish: () => {
@@ -36,15 +43,21 @@ export default function TableApplications({ applications, role_id }) {
             return;
         }
         patch(route("applications.update", application), {
+            preserveScroll: true,
             data: data,
             onSuccess: () => {
                 toast.success("Status updated successfully.");
-            },
-            onError: () => {
-                toast.error(errors.status);
-            },
-            onFinish: () => {
                 closeModal();
+            },
+            onError: (errors) => {
+                console.log(errors);
+                if (errors.interview_link) {
+                    interviewLink.current.focus();
+                    reset("interview_link");
+                } else {
+                    toast.error(errors.status);
+                    closeModal();
+                }
             },
         });
     };
@@ -297,7 +310,11 @@ export default function TableApplications({ applications, role_id }) {
                                                         </PrimaryButton>
                                                     );
                                                 }
-                                            } else if (role_id === 2) {
+                                            } else if (
+                                                role_id === 2 &&
+                                                application.status ===
+                                                    "interview"
+                                            ) {
                                                 if (isRejected) {
                                                     return (
                                                         <DangerButton
@@ -454,21 +471,83 @@ export default function TableApplications({ applications, role_id }) {
             </table>
             {/* Delete Modal */}
             <Modal show={openModal} onClose={closeModal}>
-                <form onSubmit={changeStatus} className="p-6">
-                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-400">
-                        Are you sure you want to change the status into{" "}
-                        {data.status} ?
+                <div className="p-6">
+                    <h2 className="text-md font-medium text-gray-900 dark:text-gray-400">
+                        Change the status into{" "}
+                        <span className="dark:bg-gray-500 dark:text-gray-100 px-1">
+                            {data.status}
+                        </span>{" "}
+                        ?
                     </h2>
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-500"></p>
-                    <div className="mt-6 flex justify-end">
-                        <SecondaryButton onClick={closeModal}>
-                            Cancel
-                        </SecondaryButton>
-                        <PrimaryButton className="ms-3" disabled={processing}>
-                            Change Status
-                        </PrimaryButton>
-                    </div>
-                </form>
+                    {application.status === "accepted" && (
+                        <UploadContractForm
+                            application={data}
+                            setDataApplication={setData}
+                        />
+                    )}
+                    <form onSubmit={changeStatus}>
+                        {application.status === "waiting_approval" && (
+                            <div className="mb-6 mt-3">
+                                <label
+                                    htmlFor="interview_link"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-400"
+                                >
+                                    Input the interview link
+                                </label>
+                                <div className="flex items-center">
+                                    <TextInput
+                                        ref={interviewLink}
+                                        type="text"
+                                        id="interview_link"
+                                        name="interview_link"
+                                        value={data.interview_link}
+                                        onChange={(e) =>
+                                            setData(
+                                                "interview_link",
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="mt-1 block w-full border-gray-300 dark:bg-gray-600 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={async () => {
+                                            const text =
+                                                await navigator.clipboard.readText();
+                                            setData("interview_link", text);
+                                        }}
+                                        className="ml-2 p-2 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-400 dark:hover:bg-gray-600 focus:outline-none"
+                                        title="Paste from clipboard"
+                                    >
+                                        <FaPaste size={16} />
+                                    </button>
+                                </div>
+                                <InputError
+                                    message={errors.interview_link}
+                                    className="mt-2"
+                                />
+                            </div>
+                        )}
+
+                        <div className="mt-4 flex justify-end">
+                            <SecondaryButton onClick={closeModal}>
+                                Cancel
+                            </SecondaryButton>
+                            <PrimaryButton
+                                className="ms-3"
+                                disabled={
+                                    (!data.interview_link &&
+                                        application.status === "waiting") ||
+                                    (application.status === "accepted" &&
+                                        !data.employment_contract) ||
+                                    processing
+                                }
+                            >
+                                Change Status
+                            </PrimaryButton>
+                        </div>
+                    </form>
+                </div>
             </Modal>
         </div>
     );

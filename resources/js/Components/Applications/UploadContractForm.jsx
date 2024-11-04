@@ -8,7 +8,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import { Transition } from "@headlessui/react";
 import { toast } from "sonner";
 export default function UploadContractForm(props) {
-    const { application } = props;
+    const { application, setDataApplication } = props;
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
             employment_contract: application.employment_contract || null,
@@ -22,7 +22,6 @@ export default function UploadContractForm(props) {
         }
         return `${window.location.origin}${path}`;
     };
-
     useEffect(() => {
         if (
             data.employment_contract &&
@@ -34,16 +33,23 @@ export default function UploadContractForm(props) {
     }, [data.employment_contract]);
 
     const onDrop = (acceptedFiles) => {
+        console.log(acceptedFiles[0].type);
         if (
             acceptedFiles.length &&
-            acceptedFiles[0].type === "application/pdf"
+            (acceptedFiles[0].type === "application/pdf" ||
+                (acceptedFiles[0].type ===
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document" &&
+                    setDataApplication))
         ) {
             const file = acceptedFiles[0];
             setData("employment_contract", file);
+            if (setDataApplication) {
+                setDataApplication("employment_contract", file);
+            }
             const fileURL = URL.createObjectURL(file);
             setFilePreview(fileURL);
         } else {
-            toast.error("Please upload a valid PDF file.");
+            toast.error("Please upload a valid file.");
         }
     };
 
@@ -146,11 +152,12 @@ export default function UploadContractForm(props) {
                 <div className="flex items-center gap-4 mt-4">
                     {
                         // If the user is not hired, show the upload button
-                        application.status === "offered" && (
-                            <PrimaryButton disabled={processing}>
-                                Upload
-                            </PrimaryButton>
-                        )
+                        application.status === "offered" &&
+                            !setDataApplication && (
+                                <PrimaryButton disabled={processing}>
+                                    Upload
+                                </PrimaryButton>
+                            )
                     }
 
                     <Transition

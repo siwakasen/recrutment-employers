@@ -113,7 +113,13 @@ class ApplicationController extends Controller
     {
         $request->validate([
             'status' => "required|in:rejected,interview,offered,hired",
-        ]);        
+        ]);
+
+        if($request->status === 'interview') {
+            $request->validate([
+                'interview_link' => 'required|url',
+            ]);
+        }
 
         $application->update($request->only('status'));
 
