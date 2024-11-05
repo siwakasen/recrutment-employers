@@ -17,19 +17,16 @@ class AdministratorSeeder extends Seeder
         DB::table('administrators')->insert([
             [
                 'role_id' => 2,
-                'admin_name' => 'Logobreaker',
-                'email' => 'logobreaker@gmail.com',
+                'admin_name' => 'Mr. Executive',
+                'email' => 'mrexecutive@gmail.com',
                 'password' => bcrypt('password')
             ],
             [
                 'role_id' => 1,
-                'admin_name' => 'Riksi Purnama',
-                'email' => 'riksiprnm@gmail.com',
+                'admin_name' => 'Ms. HR',
+                'email' => 'adminhr@gmail.com',
                 'password' => bcrypt('password')
             ]
         ]);
-
-
-        Administrator::factory()->count(10)->create();
     }
 }

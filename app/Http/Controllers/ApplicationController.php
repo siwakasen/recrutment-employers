@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Application;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
+use App\Mail\InterviewEmail;
+use App\Mail\AnnouncementEmail;
+use App\Mail\OfferingEmail;
+use App\Mail\RejectedMail;
 
 class ApplicationController extends Controller
 {
@@ -108,43 +113,95 @@ class ApplicationController extends Controller
             'applications' => $applications,
         ]);
     }
+
+    
     
     public function update(Request $request, Application $application): RedirectResponse
     {
-        dd($request->all());
         $request->validate([
             'status' => "required|in:rejected,interview,offered,hired",
         ]);
-
+        
         if($request->status === 'interview') {
             $request->validate([
                 'interview_link' => 'required|url',
             ]);
             // send link to email if status is interview
-        }
-
-        if($request->status === 'hired') {
-            // send announcement to email
+            $details = [
+                'subject' => 'Interview Invitation',
+                'message' => 'You have been invited for an interview. Click the link below to join the interview',
+                'applicant_name' => $application->applicant->applicant_name,
+                'position' => $application->job->job_name,
+                'interview_link' => $request->interview_link,
+            ];
+            try {
+                Mail::to($application->applicant->email)->send(new InterviewEmail($details));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Failed to send email');
+            }
             
         }
-
-
+        
+        if($request->status === 'hired') {
+            // send announcement to email
+            $details = [
+                'subject' => 'Job Offer',
+                'message' => 'Congratulations! You have been hired for the position of ' . $application->job->job_name,
+                'applicant_name' => $application->applicant->applicant_name,
+                'position' => $application->job->job_name,
+            ];
+            try {
+                Mail::to($application->applicant->email)->send(new AnnouncementEmail($details));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Failed to send email');
+            }
+        }
+        if($request->status === 'rejected'){
+            $details = [
+                'subject' => 'Rejected Mail',
+                'message' => 'We regret to inform you that your application has been rejected',
+                'applicant_name' => $application->applicant->applicant_name,
+                'position' => $application->job->job_name,
+            ];
+            try {
+                Mail::to($application->applicant->email)->send(new RejectedMail($details));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Failed to send email');
+            }
+        }
+        
         $application->update($request->only('status'));
-
+        
         return redirect()->back();
     }
 
     public function updateWithContract(Request $request, Application $application): RedirectResponse
     {
         $request->validate([
-            'status' => "required|in:offered,hired",
-            'employment_contract' => ['required', 'file', 'mimes:pdf, doc, docx'],
+            'status' => "required|in:offered",
+            'employment_contract' => ['required', 'file'],
         ]);
-
         // send file to email
+        $details = [
+            'subject' => 'Employment Contract',
+            'message' => 'Congratulations! You have been offered for the position of ' . $application->job->job_name . 
+                '. Please fill the attached employment contract and send it back to us.',
+            'applicant_name' => $application->applicant->applicant_name,
+            'employment_contract' => $request->file('employment_contract'),
+            'position' => $application->job->job_name,
+        ];
+
+        try {
+            Mail::to($application->applicant->email)->send(new OfferingEmail($details));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to send email');
+        }
 
         $application->update($request->only('status'));
+
+        return redirect()->back();
     }
+
 
 
     public function acceptByExecutive(Request $request, Application $application): RedirectResponse
@@ -152,6 +209,20 @@ class ApplicationController extends Controller
         $request->validate([
             'status' => "required|in:accepted,rejected",
         ]);  
+        if($request->status === 'rejected'){
+            $details = [
+                'subject' => 'Rejected Mail',
+                'message' => 'We regret to inform you that your application has been rejected',
+                'applicant_name' => $application->applicant->applicant_name,
+                'position' => $application->job->job_name,
+            ];
+            try {
+                Mail::to($application->applicant->email)->send(new RejectedMail($details));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Failed to send email');
+            }
+        }
+        
         $application->update($request->only('status'));
 
         return redirect()->back();

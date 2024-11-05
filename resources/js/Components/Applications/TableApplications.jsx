@@ -10,7 +10,7 @@ import TextInput from "@/Components/TextInput";
 import InputError from "@/Components/InputError";
 import UploadContractForm from "./UploadContractForm";
 
-export default function TableApplications({ applications, role_id }) {
+export default function TableApplications({ applications, role_id, error }) {
     const interviewLink = useRef();
     const [expandedApplicants, setExpandedApplicants] = useState([]);
     const [application, setApplication] = useState({});
@@ -32,7 +32,11 @@ export default function TableApplications({ applications, role_id }) {
             patch(route("applications.accept", application), {
                 data: data,
                 onSuccess: () => {
-                    toast.success("Status updated successfully.");
+                    if (error) {
+                        toast.error(error);
+                    } else {
+                        toast.success("Status updated successfully.");
+                    }
                 },
                 onError: (errors) => {
                     toast.error(errors.status);
@@ -54,7 +58,11 @@ export default function TableApplications({ applications, role_id }) {
                 preserveScroll: true,
                 forceFormData: true,
                 onSuccess: () => {
-                    toast.success("Status updated successfully.");
+                    if (error) {
+                        toast.error(error);
+                    } else {
+                        toast.success("Status updated successfully.");
+                    }
                     closeModal();
                 },
                 onError: (errors) => {
@@ -78,7 +86,11 @@ export default function TableApplications({ applications, role_id }) {
             preserveScroll: true,
             data: data,
             onSuccess: () => {
-                toast.success("Status updated successfully.");
+                if (error) {
+                    toast.error(error);
+                } else {
+                    toast.success("Status updated successfully.");
+                }
                 closeModal();
             },
             onError: (errors) => {
