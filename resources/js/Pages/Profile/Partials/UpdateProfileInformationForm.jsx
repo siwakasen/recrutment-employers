@@ -27,6 +27,7 @@ export default function UpdateProfileInformation({
         e.preventDefault();
 
         patch(route("profile.update"), {
+            preserveScroll: true,
             onError: (errors) => {
                 toast.error("Error updating profile.");
             },
