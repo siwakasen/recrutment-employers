@@ -14,6 +14,14 @@ use Inertia\Response;
 class AuthenticatedSessionController extends Controller
 {
 
+
+    /**
+     * Display the login view.
+     */
+    public function create(): RedirectResponse
+    {
+        return redirect()->route('home.index');
+    }
     /**
      * Handle an incoming authentication request.
      */
