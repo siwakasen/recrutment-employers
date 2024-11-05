@@ -30,6 +30,12 @@ class ApplicationController extends Controller
     public function cancelApplications(Request $request, Application $application): RedirectResponse
     {
         $application->update(['status' => 'cancelled']);
+        if($application->employment_contract) {
+            $path = $application->employment_contract;
+            $path = str_replace('/storage/', '', $path);
+            unlink(storage_path('app/public/' . $path));
+            $application->update(['employment_contract' => null]);
+        }
         return redirect()->back();
     }
 
