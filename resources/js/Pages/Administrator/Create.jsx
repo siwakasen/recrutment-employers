@@ -23,7 +23,6 @@ export default function Create({ administrator }) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(errors);
         post(route('administrator.store'));
     };
 

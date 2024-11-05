@@ -66,7 +66,6 @@ export default function TableApplications({ applications, role_id, error }) {
                     closeModal();
                 },
                 onError: (errors) => {
-                    console.log(errors);
                     if (errors.interview_link) {
                         interviewLink.current.focus();
                         reset("interview_link");
@@ -94,7 +93,6 @@ export default function TableApplications({ applications, role_id, error }) {
                 closeModal();
             },
             onError: (errors) => {
-                console.log(errors);
                 if (errors.interview_link) {
                     interviewLink.current.focus();
                     reset("interview_link");

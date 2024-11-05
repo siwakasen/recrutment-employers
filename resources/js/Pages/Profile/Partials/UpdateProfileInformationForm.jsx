@@ -29,7 +29,6 @@ export default function UpdateProfileInformation({
         patch(route("profile.update"), {
             onError: (errors) => {
                 toast.error("Error updating profile.");
-                console.log(errors);
             },
         });
     };

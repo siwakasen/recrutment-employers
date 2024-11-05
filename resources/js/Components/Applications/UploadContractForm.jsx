@@ -33,7 +33,6 @@ export default function UploadContractForm(props) {
     }, [data.employment_contract]);
 
     const onDrop = (acceptedFiles) => {
-        console.log(acceptedFiles[0].type);
         if (
             acceptedFiles.length &&
             (acceptedFiles[0].type === "application/pdf" ||
