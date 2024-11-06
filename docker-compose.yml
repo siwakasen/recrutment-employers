@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: recrutment_employers
+      DB_USERNAME: root
+      DB_PASSWORD: ""
+      MAIL_MAILER: smtp
+      MAIL_HOST: smtp.gmail.com
+      MAIL_PORT: 587
+      MAIL_USERNAME: ""
+      MAIL_PASSWORD: ""
+      MAIL_ENCRYPTION: ""
+      MAIL_FROM_ADDRESS: ""
+    volumes:
+      - .:/var/www
+    expose:
+      - 9000  # Expose PHP-FPM on port 9000 for Nginx
+
+  webserver:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - .:/var/www
+    ports:
+      - "8000:80"  # Map port 8000 on the host to port 80 on the Nginx container
+    depends_on:
+      - app
