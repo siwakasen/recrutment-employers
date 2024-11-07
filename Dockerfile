@@ -1,61 +1,64 @@
-# Use the official PHP image with Composer and Node installed
 FROM php:8.2-fpm
 
-# Set working directory
+# Copy composer.lock dan composer.json ke /var/www
+COPY composer.lock composer.json /var/www/
+COPY package.json /var/www/
+
+# Set sebagai working directory
 WORKDIR /var/www
 
-# Install system dependencies
+# Install dependencies yang diperlukan
 RUN apt-get update && apt-get install -y \
+    build-essential \
     libpng-dev \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
-    libzip-dev \
+    locales \
     zip \
+    libzip-dev \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
     unzip \
     git \
     curl \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql zip
+    libonig-dev \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Hapus cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs
+# Install extensions
+RUN docker-php-ext-configure zip
+RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd
 
-# Install npm dependencies
-COPY package*.json ./
-RUN npm install
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install Composer dependencies
-COPY composer.json composer.lock ./
-RUN composer install --prefer-dist --no-scripts --no-dev --optimize-autoloader
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
 
-# Copy existing application directory
-COPY . .
+# npm install && build
 
-# Set appropriate permissions
-RUN chown -R www-data:www-data /var/www && \
-    chmod -R 755 /var/www/storage
+# Copy existing application directory contents
+COPY . /var/www
 
-# Expose port 9000 for PHP-FPM
+# Copy existing application directory permissions
+COPY --chown=www:www . /var/www
+
+RUN composer install
+RUN npm install -g npm@latest
+RUN npm install && npm run build
+# Change current user to www
+USER www
+
+# Install npm
+
+
+# Expose port 9000 and start php-fpm server
 EXPOSE 9000
 
-# Start PHP-FPM server
 CMD ["php-fpm"]
-
-# Application environment configuration (set via docker-compose or externally)
-ENV DB_CONNECTION=mysql \
-    DB_HOST=127.0.0.1 \
-    DB_PORT=3306 \
-    DB_DATABASE=recrutment_employers \
-    DB_USERNAME=root \
-    DB_PASSWORD= \
-    MAIL_MAILER=smtp \
-    MAIL_HOST=smtp.gmail.com \
-    MAIL_PORT=587 \
-    MAIL_USERNAME= \
-    MAIL_PASSWORD= \
-    MAIL_ENCRYPTION= \
-    MAIL_FROM_ADDRESS=

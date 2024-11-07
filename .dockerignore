@@ -13,7 +13,6 @@ storage/framework/*
 storage/logs/*
 
 # Environment files
-.env
 .env.*.local
 
 # Other local files or folders
