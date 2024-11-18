@@ -83,12 +83,12 @@ class ApplicationController extends Controller
         }])
             ->where('applicant_id', $user->applicant_id)
             ->paginate(10);
-        
+
         return Inertia::render('Applications/Index', [
             'applications' => $applications,
         ]);
     }
-    
+
     // for administrators
     public function showAll(Request $request)
     {
@@ -114,20 +114,20 @@ class ApplicationController extends Controller
             $query->with('jobType');
         },'applicant'])
             ->paginate(10);
-        
+
         return Inertia::render('Administrator/Applications/Index', [
             'applications' => $applications,
         ]);
     }
 
-    
-    
+
+
     public function update(Request $request, Application $application): RedirectResponse
     {
         $request->validate([
             'status' => "required|in:rejected,interview,offered,hired",
         ]);
-        
+
         if($request->status === 'interview') {
             $request->validate([
                 'interview_link' => 'required|url',
@@ -145,9 +145,9 @@ class ApplicationController extends Controller
             } catch (\Exception $e) {
                 return redirect()->back()->with('error', 'Failed to send email');
             }
-            
+
         }
-        
+
         if($request->status === 'hired') {
             // send announcement to email
             $details = [
@@ -175,9 +175,9 @@ class ApplicationController extends Controller
                 return redirect()->back()->with('error', 'Failed to send email');
             }
         }
-        
+
         $application->update($request->only('status'));
-        
+
         return redirect()->back();
     }
 
@@ -190,7 +190,7 @@ class ApplicationController extends Controller
         // send file to email
         $details = [
             'subject' => 'Employment Contract',
-            'message' => 'Congratulations! You have been offered for the position of ' . $application->job->job_name . 
+            'message' => 'Congratulations! You have been offered for the position of ' . $application->job->job_name .
                 '. Please fill the attached employment contract and send it back to us.',
             'applicant_name' => $application->applicant->applicant_name,
             'employment_contract' => $request->file('employment_contract'),
@@ -214,7 +214,7 @@ class ApplicationController extends Controller
     {
         $request->validate([
             'status' => "required|in:accepted,rejected",
-        ]);  
+        ]);
         if($request->status === 'rejected'){
             $details = [
                 'subject' => 'Rejected Mail',
@@ -228,9 +228,15 @@ class ApplicationController extends Controller
                 return redirect()->back()->with('error', 'Failed to send email');
             }
         }
-        
+
         $application->update($request->only('status'));
 
         return redirect()->back();
     }
+
+        public function samplePost(Request $request){
+            return response()->json([
+                'data'=> $request
+            ]);
+        }
 }

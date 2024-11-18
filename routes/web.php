@@ -11,11 +11,12 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/jobs/{job}', [HomeController::class, 'detail'])->name('jobs.detail');
+Route::get('/sample-post',[ApplicationController::class,'samplePost'])->name('samplePost');
 
 Route::middleware(['auth', 'verified:'])->group(function () {
     Route::post('/apply', [ApplicationController::class, 'store'])->name('job.apply');
     Route::delete('/cancel-application/{application}', [ApplicationController::class, 'cancelApplications'])->name('application.cancel');
-    Route::post('/upload-contract/{application}', [ApplicationController::class, 'uploadEmploymentContract'])->name('application.upload-contract');  
+    Route::post('/upload-contract/{application}', [ApplicationController::class, 'uploadEmploymentContract'])->name('application.upload-contract');
 });
 
 Route::middleware('auth')->group(function () {
@@ -23,7 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/cv', [ProfileController::class, 'storeCv'])->name('profile.cv.store');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     Route:: get('/applications', [ApplicationController::class, 'show'])->name('applications.show');
 
 });

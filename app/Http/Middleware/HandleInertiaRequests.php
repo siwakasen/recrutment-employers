@@ -39,6 +39,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $administrator ? $administrator->load('role') : null,
             ],
 
+
         ];
     }
 }
