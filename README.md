@@ -12,6 +12,9 @@
 
 Create Google app password:
 - **[How to create app passwords](https://knowledge.workspace.google.com/kb/how-to-create-app-passwords-000009237)**
+- This is the exmaple of the key (save the key, it will be used later):
+- ![image](https://github.com/user-attachments/assets/c25cdd04-0453-454f-9c56-ec5dcfd40337)
+
 ## Installation
 
 ```bash
