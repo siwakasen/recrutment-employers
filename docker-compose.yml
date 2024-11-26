@@ -1,21 +1,5 @@
 version: "3.7"
 services:
-  app:
-    build:
-      args:
-        user: gandhi
-        uid: 1000
-      context: ./
-      dockerfile: Dockerfile
-    image: ppaw
-    container_name: ppaw-app
-    restart: unless-stopped
-    working_dir: /var/www/
-    volumes:
-      - ./:/var/www
-    networks:
-      - ppaw
-
   db:
     image: mysql:latest
     container_name: travellist-db
@@ -23,25 +7,7 @@ services:
     environment:
       MYSQL_DATABASE: recrutment_employers
       MYSQL_ALLOW_EMPTY_PASSWORD: true
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+    ports:
+      - "3306:3306"
     volumes:
       - ./docker-compose/mysql:/docker-entrypoint-initdb.d
-    networks:
-      - ppaw
-
-  nginx:
-    image: nginx:latest
-    container_name: ppaw-nginx
-    restart: unless-stopped
-    ports:
-      - 8000:80
-    volumes:
-      - ./:/var/www
-      - ./docker-compose/nginx:/etc/nginx/c.d/
-    networks:
-      - ppaw
-
-networks:
-  ppaw:
-    driver: bridge
