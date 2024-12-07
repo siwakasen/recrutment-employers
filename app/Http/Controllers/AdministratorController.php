@@ -15,7 +15,6 @@ use Illuminate\Validation\Rules\Password;
 
 class AdministratorController extends Controller
 {
-    // Display the login view
     public function loginview()
     {
         return Inertia::render('Administrator/Login', [
@@ -23,7 +22,6 @@ class AdministratorController extends Controller
         ]);
     }
 
-    // handle login request
     public function login(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
@@ -31,9 +29,6 @@ class AdministratorController extends Controller
 
         return redirect()->route('administrator.dashboard');
     }
-    /**
-     * Destroy an authenticated session.
-     */
     public function logout(Request $request): RedirectResponse
     {
         Auth::guard('administrator')->logout();
