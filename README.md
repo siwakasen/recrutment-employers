@@ -54,7 +54,7 @@ cp .env.example .env
 
 # If using windows, just simply change the name of .env.example to .env
 ```
-change this section:
+change this section in .env:
 - the email must be the same as email that used to create app password
 ```bash
 MAIL_MAILER=smtp
